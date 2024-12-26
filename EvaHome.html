@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvaHome</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css">
+    <style>
+        body {
+            font-family: 'Vazir', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+        img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #b54604;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #913905;
+        }
+    </style>
+</head>
+<body>
+    <img src="Wellcome.png" alt="خوش آمدید">
+    <div>
+        <a id="evaluation-link" class="btn" href="#">ورود به سامانه ارزشیابی</a>
+    </div>
+
+    <script>
+        // گرفتن پارامتر id از URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        // ایجاد لینک برای دکمه
+        const evaluationLink = document.getElementById('evaluation-link');
+        if (id) {
+            evaluationLink.href = `EvaluationPage.html?id=${id}`;
+        } else {
+            evaluationLink.href = 'EvaluationPage.html';
+        }
+    </script>
+</body>
+</html>
