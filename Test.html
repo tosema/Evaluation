@@ -1,72 +1,26 @@
-<div id="" style="min-height: 480px; 
+<div id="96RLPqR1" style="min-height: 480px; 
     width: 100vw;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     z-index: 99999;">
-    <div id="" style="position: absolute; top: 50%; left: 50%; 
-        width: 35px; 
-        height: 35px; 
-        border: 4px solid rgba(0, 0, 0, 0.1); 
-        border-top: 4px solid #555; 
-        border-radius: 50%; 
-        animation: spin 1s linear infinite;">
-    </div>
+    <div id="porsline-loading-96RLPqR1" style="position: absolute; top: 50%; left: 50%; width: 35px; height: 35px; border: 4px solid rgba(0, 0, 0, 0.1); border-top: 4px solid #555; border-radius: 50%; animation: spin-96RLPqR1 1s linear infinite;"></div>
     <script>
-      // تابع برای دریافت مقدار پارامتر از URL
-      function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-      }
-
-      // دریافت مقدار id از پارامتر URL
-      const id = getQueryParam('id') || 'defaultId';
-
-      // تنظیم id بر روی عناصر
-      const container = document.querySelector('div[style]');
-      container.id = id;
-
-      const loadingDiv = container.querySelector('div');
-      loadingDiv.id = `porsline-loading-${id}`;
-
-      // ایجاد انیمیشن به صورت پویا
       const styleSheet = document.createElement('style');
-      styleSheet.innerHTML = `
-        @keyframes spin-${id} {
+      styleSheet.innerHTML = `@keyframes spin-96RLPqR1 {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
-        }
-
-        /* استایل‌های ریسپانسیو */
-        @media (max-width: 768px) {
-          #${id} {
-            min-height: 100vh;
-            height: auto;
-          }
-          #porsline-loading-${id} {
-            width: 25px;
-            height: 25px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          #porsline-loading-${id} {
-            width: 20px;
-            height: 20px;
-          }
-        }
-      `;
+        }`;
       document.head.appendChild(styleSheet);
-
-      // افزودن اسکریپت دینامیک
+      const loadingIndicator = document.getElementById('porsline-loading-96RLPqR1');
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.fetchPriority = 'high';      
       script.onload = function() {
-        loadingDiv.style.display = 'none';
+        loadingIndicator.style.display = 'none';
       };
-      script.src = `https://survey.porsline.ir/embed/eyJib3JkZXIiOiJub25lIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiMTAwJSJ9/${id}`+'/sv';
-      container.appendChild(script);
+      script.src = 'https://survey.porsline.ir/embed/eyJib3JkZXIiOiJub25lIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiMTAwJSJ9/96RLPqR1';
+      document.getElementById('96RLPqR1').appendChild(script);
     </script>
-</div>
+  </div>
