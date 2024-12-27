@@ -1,60 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Parameter Evaluation</title>
-    <style>
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 35px;
-            height: 35px;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #555;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        #container {
-            min-height: 480px;
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 99999;
-        }
-    </style>
-</head>
-<body>
-    <div id="container">
-        <div id="loading-indicator"></div>
-    </div>
-
+<div id="VnguJuPh" style="min-height: 480px; 
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;">
+    <div id="porsline-loading-VnguJuPh" style="position: absolute; top: 50%; left: 50%; width: 35px; height: 35px; border: 4px solid rgba(0, 0, 0, 0.1); border-top: 4px solid #555; border-radius: 50%; animation: spin-VnguJuPh 1s linear infinite;"></div>
     <script>
-        // Extract the dynamic parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const param = urlParams.get('id') || 'defaultParam'; // Default fallback if id is not provided
-
-        // Create and append the script dynamically
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.fetchPriority = 'high';
-
-        script.onload = function() {
-            loadingIndicator.style.display = 'none';
-        };
-
-        script.src = `https://survey.porsline.ir/embed/eyJib3JkZXIiOiJub25lIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiMTAwJSJ9/${param}`;
-        document.getElementById('container').appendChild(script);
+      const styleSheet = document.createElement('style');
+      styleSheet.innerHTML = `@keyframes spin-VnguJuPh {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }`;
+      document.head.appendChild(styleSheet);
+      const loadingIndicator = document.getElementById('porsline-loading-VnguJuPh');
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.fetchPriority = 'high';      
+      script.onload = function() {
+        loadingIndicator.style.display = 'none';
+      };
+      script.src = 'https://survey.porsline.ir/embed/eyJib3JkZXIiOiJub25lIiwid2lkdGgiOiIxMDAlIiwiaGVpZ2h0IjoiMTAwJSJ9/VnguJuPh';
+      document.getElementById('VnguJuPh').appendChild(script);
     </script>
-</body>
-</html>
+  </div>
