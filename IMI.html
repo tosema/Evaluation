@@ -6,25 +6,19 @@
     <script>
         // دریافت مقدار پارامتر از URL (بدون کلید، فقط مقدار بعد از "?")
         var param = window.location.search.substring(1).trim(); // حذف "?" و فضای اضافی
-        
-        // بررسی اگر پارامتر خالی باشد، مقدار "Anonymous" قرار می‌دهیم
-        if (!param) {
-            param = "Anonymous";
-        }
+        if (!param) { param = "Anonymous"; } // اگر پارامتر خالی بود، مقدار "Anonymous"
 
         // ارسال داده به Google Apps Script API
-        var apiUrl = "https://script.google.com/macros/library/d/16-gpN0ReN7lxgoEbjdCsSbeJ4-BHd-TSNV5KfO-Sgfvgr7gkXteQg4Ju/1?param=" + encodeURIComponent(param);
+        var apiUrl = "https://script.google.com/macros/s/AKfycbx0a7VhXcu0l98nUxt0fFGEnxILzeYG25L0Kfly4v4VGB_tS157Oct_NITgjWq9_FgJ_A/exec?data=" + encodeURIComponent(param);
 
         fetch(apiUrl, { method: "GET", mode: "no-cors" })
-            .then(response => {
-                console.log("Data sent to Google Sheets:", param);
-            })
+            .then(response => console.log("Data sent to Google Sheets:", param))
             .catch(error => console.error("Error sending data:", error));
 
         // هدایت به ویدیو
         setTimeout(function() {
             window.location.href = "https://tosema.github.io/Evaluation/IMI_Clip.mp4";
-        }, 500); // تأخیر 0.5 ثانیه‌ای برای ارسال داده
+        }, 500); // 0.5 ثانیه تأخیر برای ارسال داده قبل از هدایت
     </script>
 </head>
 <body>
