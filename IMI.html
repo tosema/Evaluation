@@ -9,7 +9,7 @@
         if (!param) { param = "Anonymous"; } // اگر پارامتر خالی بود، مقدار "Anonymous"
 
         // ارسال داده به Google Apps Script API
-        var apiUrl = "https://script.google.com/macros/s/AKfycbx0a7VhXcu0l98nUxt0fFGEnxILzeYG25L0Kfly4v4VGB_tS157Oct_NITgjWq9_FgJ_A/exec?data=" + encodeURIComponent(param);
+        var apiUrl = "https://script.google.com/macros/s/AKfycbymnPmzRaGjqq76tbdityyBiZw7Q9o1pmPRcdz-gHZnTME2t7wVA-X9KQwXFaRYvcDxWA/exec?data=" + encodeURIComponent(param);
 
         fetch(apiUrl, { method: "GET", mode: "no-cors" })
             .then(response => console.log("Data sent to Google Sheets:", param))
