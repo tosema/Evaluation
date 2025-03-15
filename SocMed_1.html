@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شبکه‌های اجتماعی - توسعه مسکن</title>
+    <style>
+        html, body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('BackG8.jpg') no-repeat center center;
+            background-size: cover;
+            width: 100%;
+            overflow: hidden;
+        }
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 90%;
+            max-width: 400px;
+            padding: 10px;
+        }
+        .social-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 55px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 1s ease;
+        }
+        .social-button img {
+            max-height: 100%;
+            width: auto;
+        }
+        .social-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+    <script>
+        function getQueryParam(param) {
+            let params = new URLSearchParams(window.location.search);
+            return params.get(param) || "";
+        }
+
+        let userRef = getQueryParam("ref");
+        let apiUrl = "https://script.google.com/macros/s/AKfycbw94QJv-bF2jeiq3L0wAAT-wqN_-Zz8sXjU0unXpcLIg3VpiW1rMXEcGBtoTtb5SUUiwg/exec"; // لینک API خود را جایگزین کنید
+
+        if (userRef) {
+            fetch(`${apiUrl}?ref=${userRef}`)
+                .then(response => response.text())
+                .then(data => console.log("صفحه ثبت شد:", data))
+                .catch(error => console.error("خطا در ثبت:", error));
+        }
+
+        function logClick(platform) {
+            if (userRef) {
+                fetch(`${apiUrl}?ref=${userRef}&platform=${platform}`)
+                    .then(response => response.text())
+                    .then(data => console.log("کلیک ثبت شد:", data))
+                    .catch(error => console.error("خطا در ثبت کلیک:", error));
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="social-links">
+        <a href="https://www.instagram.com/tosemaskan.co/" target="_blank" onclick="logClick('Instagram')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/Instagram.png" alt="Instagram">
+            </div>
+        </a>
+        <a href="https://www.aparat.com/Tosemaskan.co" target="_blank" onclick="logClick('Aparat')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/Aparat.png" alt="Aparat">
+            </div>
+        </a>
+        <a href="https://t.me/tosemaskanCo" target="_blank" onclick="logClick('Telegram')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/Telegram.png" alt="Telegram">
+            </div>
+        </a>
+        <a href="http://eitaa.com/tosemaskanCo" target="_blank" onclick="logClick('Eitaa')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/Eitaa.png" alt="Eitaa">
+            </div>
+        </a>
+        <a href="https://www.youtube.com/@ToseMaskanCo" target="_blank" onclick="logClick('YouTube')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/YouTube.png" alt="YouTube">
+            </div>
+        </a>
+        <a href="https://rubika.ir/tosemaskanco" target="_blank" onclick="logClick('Rubika')">
+            <div class="social-button">
+                <img src="https://tose-mi.com/wp-content/uploads/2025/03/Rubika.png" alt="Rubika">
+            </div>
+        </a>
+    </div>
+</body>
+</html>
