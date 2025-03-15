@@ -3,92 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شبکه‌های اجتماعی - توسعه مسکن</title>
-    <style>
-        html, body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('BackG8.jpg') no-repeat center center;
-            background-size: cover;
-            width: 100%;
-            overflow: hidden;
-        }
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 90%;
-            max-width: 400px;
-            padding: 10px;
-        }
-        .social-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 55px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            background-color: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: all 1s ease;
-        }
-        .social-button img {
-            max-height: 100%;
-            width: auto;
-        }
-        .social-button:active {
-            transform: scale(0.95);
-        }
-    </style>
     <script>
-        // تابعی برای دریافت پارامتر از URL
-        function getQueryParam(param) {
-            let params = new URLSearchParams(window.location.search);
-            return params.get(param) || "";
-        }
+        // دریافت مقدار پارامتر "ref" از URL
+        var refParam = new URLSearchParams(window.location.search).get('ref') || "NoParam";  // اگر "ref" موجود نباشد، مقدار پیش‌فرض "NoParam" باشد
 
-        // دریافت پارامتر "ref" از URL
-        let userRef = getQueryParam("ref");
-
-        // URL API مستقر شده از اسکریپت گوگل اپس
-        let apiUrl = "https://script.google.com/macros/s/AKfycbxff1AB3namLcJR7t3wvaWsMHEOOhOXzwa8QDOa1FbGMYKWouv4UvWip9Dnf9wSUIoGhw/exec";
-
-        // اگر پارامتر "ref" وجود داشت، درخواست به API ارسال می‌شود
-        if (userRef) {
-            // ساخت URL درخواستی با پارامترها
-            let url = `${apiUrl}?ref=${userRef}&platform=Social Page`;
-
-            // نمایش URL درخواستی در کنسول برای دیباگ
-            console.log("URL درخواستی (بارگذاری صفحه):", url);
-
-            // ارسال درخواست fetch به API
-            fetch(url)
-                .then(response => response.text())
-                .then(data => console.log("صفحه ثبت شد:", data))
-                .catch(error => console.error("خطا در ثبت:", error));
-        }
-
-        // تابعی برای ثبت کلیک روی لینک‌های شبکه‌های اجتماعی
+        // ارسال داده‌ها به Google Apps Script API هنگام کلیک روی هر دکمه
         function logClick(platform) {
-            if (userRef) {
-                // ساخت URL درخواستی با پارامترها
-                let url = `${apiUrl}?ref=${userRef}&platform=${platform}`;
+            var apiUrl = "https://script.google.com/macros/s/AKfycbyHsIJsz3sWSMIcLqSnF4rE6b41vbPtGHWSrQfMvmUYpJLCN6H65W89wMTqO59dr3pdpw/exec?ref=" + encodeURIComponent(refParam) + "&platform=" + encodeURIComponent(platform);
 
-                // نمایش URL درخواستی در کنسول برای دیباگ
-                console.log("URL درخواستی (کلیک):", url);
-
-                // ارسال درخواست fetch به API
-                fetch(url)
-                    .then(response => response.text())
-                    .then(data => console.log("کلیک ثبت شد:", data))
-                    .catch(error => console.error("خطا در ثبت کلیک:", error));
-            }
+            fetch(apiUrl, { method: "GET", mode: "no-cors" })
+                .then(response => console.log("کلیک ثبت شد:", platform))
+                .catch(error => console.error("خطا در ثبت کلیک:", error));
         }
     </script>
 </head>
