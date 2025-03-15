@@ -14,9 +14,10 @@
         }
 
         let userRef = getQueryParam("ref");
-        let apiUrl = "https://script.google.com/macros/s/AKfycbw94QJv-bF2jeiq3L0wAAT-wqN_-Zz8sXjU0unXpcLIg3VpiW1rMXEcGBtoTtb5SUUiwg/exec";
+        let apiUrl = "https://script.google.com/macros/s/AKfycbxvvj-US5MZ4eOF3A_4j37AU5C4x_z2gPkBt1smrthhpTOaKYbS0L82DyMGiz7N_6QNnA/exec";
 
         if (userRef) {
+            // ارسال درخواست به اسکریپت گوگل اپس برای ثبت بارگذاری صفحه
             fetch(`${apiUrl}?ref=${userRef}&platform=Social Page`)
                 .then(response => response.text())
                 .then(data => console.log("صفحه ثبت شد:", data))
@@ -25,6 +26,7 @@
 
         function logClick(platform) {
             if (userRef) {
+                // ارسال درخواست به اسکریپت گوگل اپس برای ثبت کلیک روی لینک
                 fetch(`${apiUrl}?ref=${userRef}&platform=${platform}`)
                     .then(response => response.text())
                     .then(data => console.log("کلیک ثبت شد:", data))
