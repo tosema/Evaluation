@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارتابل شخصی</title>
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fb;
+        }
+        .container {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 10px;
+      background-image: url("Kar_BKG.mp4");
+      background-size: cover;        /* برای پوشش کامل */
+      background-repeat: no-repeat;  /* تکرار نشود */
+      background-position: center;   /* وسط‌چین */            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        .header-image {
+                   max-width: 450px; /* حداکثر عرض */
+                   height: auto; /* تطبیق ارتفاع */
+                   aspect-ratio: 450 / 260; /* نسبت تصویر */
+                   object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 10px; /* گرد کردن لبه‌ها */
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-link {
+            display: block;
+            padding: 12px 20px;
+            margin: 10px 0;
+            background-color: #47138a;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .form-link:hover {
+            background-color: #3f3151;
+            transform: translateY(-2px);
+        }
+        .user-avatar, .small-avatar {
+            border-radius: 50%;
+            border: 2px solid black;
+            object-fit: cover;
+        }
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            margin-left: 10px;
+        }
+        .small-avatar {
+            width: 50px;
+            height: 50px;
+            margin-left: 10px;
+        }
+        .sub-info {
+            font-size: 0.8em;
+            color: #ffeb7e;
+            margin-top: 5px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const formsContainer = document.getElementById('forms-container');
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const titleContainer = document.getElementById('title-container');
+            const avatarContainer = document.getElementById('user-avatar');
+
+            if (!id) {
+                formsContainer.innerHTML = '<div class="error-message">خطا: شناسه‌ای ارسال نشده است.</div>';
+                return;
+            }
+
+            const apiUrl = `https://script.google.com/macros/s/AKfycby7xIWl7N6C7R8QAph4b7JIAj3jdY5BVmkTrmzCp8f1_qTFuAWlbMRk25w0HQ8YPiXO/exec?id=${id}`;
+
+            formsContainer.innerHTML = '<div class="loading">در حال بارگذاری فرم‌ها...</div>';
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`خطای پاسخ: ${response.status}`);
+                
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    // تنظیم محتوای عنوان و تصویر کنار آن (ستون 0 و ستون 14)
+                    const evaluatorName = data[0][18] || 'نام ارزیاب';
+                    const evaluatorImage = data[0][28] || 'https://via.placeholder.com/70'; // لینک تصویر اول
+                    titleContainer.textContent = evaluatorName;
+                    avatarContainer.src = evaluatorImage;
+
+                    // افزودن لینک‌های مربوط به هر ردیف
+                    formsContainer.innerHTML = ''; // پاک کردن پیام لودینگ
+                    data.forEach(row => {
+                        const link = document.createElement('a');
+                        link.href = row[13] || '#'; // لینک فرم از ستون 13
+                        link.target = '_blank';
+                        link.classList.add('form-link');
+                        link.innerHTML = `
+                            <div style="display: flex; align-items: center;">
+                                <!-- تصویر کنار ستون 1 -->
+                                <img src="${row[27] || 'https://via.placeholder.com/50'}" class="small-avatar" alt="تصویر دوم">
+                                <div>
+                                    <span style="font-size: 1.2em; font-weight: bold;">${row[1] || 'بدون نام'}</span>
+                                    <div class="sub-info">${row[5] || 'بدون پست سازمانی'}</div>
+                                </div>
+                                <!-- تصویر کنار ستون 0 
+                                <img src="${row[28] || 'https://via.placeholder.com/70'}" class="user-avatar" alt="تصویر اول">   -->
+                            </div>
+                        `;
+                        formsContainer.appendChild(link);
+                    });
+                } else {
+                    formsContainer.innerHTML = '<p>هیچ فرم معتبری یافت نشد.</p>';
+                }
+            } catch (error) {
+                console.error('خطا در دریافت داده‌ها:', error);
+                formsContainer.innerHTML = '<div class="error-message">خطایی در بارگذاری داده‌ها رخ داد.</div>';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- تصویر بالای صفحه -->
+        <img src="Karaneh_Logo.png" alt="تصویر بالای صفحه" class="header-image">
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <!-- تصویر بند انگشتی کنار نام ارزیاب -->
+             <img id="user-avatar" src="https://via.placeholder.com/70" alt="تصویر کاربر ناشناس" class="user-avatar">
+            <h2 id="title-container" style="margin-right: 10px; font-size: 1.5em;"></h2>
+        </div>
+        <p>در صورت بروز مشکل با داخلی 150 تماس حاصل فرمایید.</p>
+        <div id="forms-container" class="loading">
+            در حال بارگذاری فرم‌ها...
+        </div>
+    </div>
+</body>
+</html>
