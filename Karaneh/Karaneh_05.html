@@ -26,13 +26,13 @@
       animation: fadeIn 1s ease-out;
     }
     .header-image {
-       max-width: 430px; 
+       width: 100%;            /* ⬅️ عرض تصویر را درون کانتینر نگه می‌دارد */
+       max-width: 430px;       /* ⬅️ حداکثر عرض برای نمایش در دسکتاپ */
       height: auto;
-      aspect-ratio: 400 / 90; */
       object-fit: contain;
       margin-bottom: 20px;
-      margin-Right: 0px;
       border-radius: 10px;
+      display: block;
     }
     h2 {
       font-size: 1.8em;
