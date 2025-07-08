@@ -63,12 +63,12 @@
     .user-avatar {
       width: 70px;
       height: 70px;
-      margin-left: 10px;
+      margin-left: 5px;
     }
     .small-avatar {
       width: 50px;
       height: 50px;
-      margin-left: 10px;
+      margin-left: 5px;
     }
     .sub-info {
       font-size: 0.8em;
@@ -117,7 +117,7 @@
             link.target = '_blank';
             link.classList.add('form-link');
             link.innerHTML = `
-              <div style="display: flex; align-items: center;">
+              <div style="display: flex; align-items: center; margin-right:-5px; margin-left:-5px">
                 <img src="${row[32] || 'https://via.placeholder.com/50'}" class="small-avatar" alt="تصویر دوم">
                 <div>
                   <span style="font-size: 1.2em; font-weight: bold;">${row[2]+' '+ row[3] || 'بدون نام'}</span>
