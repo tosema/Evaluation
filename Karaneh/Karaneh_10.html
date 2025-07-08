@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارتابل شخصی</title>
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fb;
+        }
+        .container {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 10px;
+            background-image: url("Kar_BKG.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        .header-image {
+            width: 100%;
+            max-width: 430px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: block;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-link {
+            display: block;
+            padding: 12px 20px;
+            margin: 10px 0;
+            background-color: #47138a;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer; /* اضافه شده برای نشان دادن قابل کلیک بودن */
+        }
+        .form-link:hover {
+            background-color: #3f3151;
+            transform: translateY(-2px);
+        }
+        .user-avatar, .small-avatar {
+            border-radius: 50%;
+            border: 2px solid black;
+            object-fit: cover;
+        }
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            margin-left: 2px;
+        }
+        .small-avatar {
+            width: 50px;
+            height: 50px;
+            margin-left: 2px;
+            margin-right: -5px; /* تصحیح املای margin-righ به margin-right */
+        }
+        .sub-info {
+            font-size: 0.8em;
+            color: #ffeb7e;
+            margin-top: 1px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Styles for the Pop-up */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup-content {
+            background-color: #47138a; /* مطابق با رنگ دکمه ها */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: right;
+            color: white;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        .popup-overlay.active .popup-content {
+            transform: translateY(0);
+        }
+        .popup-content h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #ffeb7e;
+            text-align: center;
+        }
+        .popup-content .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .popup-content .input-group label {
+            width: 45%; /* برای قرار گرفتن دو لیبل و اینپوت کنار هم */
+            font-size: 0.95em;
+            text-align: right;
+            margin-left: 10px;
+            white-space: nowrap; /* جلوگیری از شکستن خط */
+        }
+        .popup-content .input-group input[type="number"] {
+            width: 50%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #333;
+            box-sizing: border-box; /* شامل پدینگ و بوردر در عرض */
+        }
+        .popup-content .calculated-value {
+            font-size: 0.9em;
+            color: #abf9a4;
+            margin-top: 5px;
+            text-align: center;
+            width: 100%;
+        }
+        .popup-content .popup-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+        }
+        .popup-content .popup-buttons button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .popup-content .popup-buttons .save-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .popup-content .popup-buttons .save-button:hover {
+            background-color: #218838;
+        }
+        .popup-content .popup-buttons .cancel-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .popup-content .popup-buttons .cancel-button:hover {
+            background-color: #c82333;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 1.8em;
+            color: #ffeb7e;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .person-name-popup {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #abf9a4;
+            text-align: center;
+        }
+        .popup-avatar-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .popup-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #ffeb7e;
+            margin-left: 10px;
+            object-fit: cover;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <script>
+        // Global variable to store fetched data
+        let globalData = [];
+        let currentRowIndex = -1; // To keep track of the row being edited
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const formsContainer = document.getElementById('forms-container');
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const titleContainer = document.getElementById('title-container');
+            const avatarContainer = document.getElementById('user-avatar');
+
+            if (!id) {
+                formsContainer.innerHTML = '<div class="error-message">شناسه‌ای ارسال نشده است.</div>';
+                return;
+            }
+
+            const prefix = "aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6WHdUNk9LWkhwQ19pdDBRWmItQ1dJYUZ1cXZRdjRGRFhVMXd5VkNXc3ZtbHloaHdvalNMS3V0TFkzQ21TdEoyWkEvZXhlYz9pZD0=";
+            const CheckContainer = "Mvcy9BS2Z5Y2J5N3hJV2";
+            const fullAddress = atob(prefix) + id + "&key=" + CheckContainer;
+            formsContainer.innerHTML = '<div class="loading">در حال بارگذاری داده‌ها...</div>';
+
+            try {
+                const response = await fetch(fullAddress);
+                if (!response.ok) throw new Error(`خطای پاسخ: ${response.status}`);
+                const data = await response.json();
+                globalData = data; // Store data globally
+
+                renderForms(globalData); // Initial render
+            } catch (error) {
+                console.error('خطا در دریافت داده‌ها:', error);
+                formsContainer.innerHTML = '<div class="error-message">خطایی در بارگذاری داده‌ها رخ داد.</div>';
+            }
+        });
+
+        function renderForms(dataToRender) {
+            const formsContainer = document.getElementById('forms-container');
+            const titleContainer = document.getElementById('title-container');
+            const avatarContainer = document.getElementById('user-avatar');
+
+            if (dataToRender.length > 0) {
+                const evaluatorName = dataToRender[0][10] || 'نام مدیر';
+                const evaluatorImage = dataToRender[0][36] || 'https://via.placeholder.com/70';
+                titleContainer.textContent = evaluatorName;
+                avatarContainer.src = evaluatorImage;
+
+                formsContainer.innerHTML = '';
+                dataToRender.forEach((row, index) => {
+                    const link = document.createElement('a');
+                    // link.href = row[34] || '#'; // Disable direct link
+                    // link.target = '_blank';
+                    link.classList.add('form-link');
+                    link.dataset.rowIndex = index; // Store the row index
+                    link.addEventListener('click', () => openPopup(index)); // Open popup on click
+
+                    link.innerHTML = `
+                        <div style="display: flex; align-items: center; margin-right:-5px; margin-left:-5px">
+                            <img src="${row[35] || 'https://via.placeholder.com/50'}" class="small-avatar" alt="تصویر دوم">
+                            <div>
+                                <span style="font-size: 1.2em; font-weight: bold;">${row[2] + ' ' + row[3] || 'بدون نام'}</span>
+
+                                <div class="sub-info">
+                                    ${row[7]
+                                        ? '<span style="color: yellow;"></span>  <span style="color: #abf9a4;">' + row[7] + ' </span>'
+                                        : 'بدون پست سازمانی'}
+                                </div>
+
+                                <div class="sub-info">
+                                    ${row[13]
+                                        ? '<span style="color: yellow;">حقوق پایه:</span>  <span style="color: white;">' + Number(row[13]).toLocaleString() + ' ریال</span>'
+                                        : 'بدون حقوق'}
+                                </div>
+                                <div class="sub-info">
+                                    ${row[24]
+                                        ? '<span style="color: yellow;">کارانه مدیر:</span>  <span style="color: white;">' + Number(row[24]).toLocaleString() + ' ریال</span>'
+                                        : 'بدون کارانه'}
+                                </div>
+                                <div class="sub-info">
+                                    ${row[22]
+                                        ? '<span style="color: yellow;">اضافه‌کار حضوری:</span>  <span style="color: white;">' + row[17] + ' ساعت - </span><span style="color: yellow;"> نظر مدیر:</span>  <span style="color: white;">' + row[22] + ' ساعت</span>'
+                                        : 'بدون اضافه‌کار'}
+                                </div>
+
+                                <div class="sub-info">
+                                    ${row[18]
+                                        ? '<span style="color: yellow;">غیبت ساعتی:</span>  <span style="color: white;">' + row[18] + ' ساعت  -  </span> <span style="color: yellow;"> روزانه:</span>  <span style="color: white;">' + row[19] + ' روز</span> '
+                                        : 'بدون غیبت'}
+                                </div>
+
+                                <div class="sub-info">
+                                    ${row[21]
+                                        ? '<span style="color: yellow;">مرخصی روزانه:</span>  <span style="color: white;">' + row[20] + ' روز  -  </span>  <span style="color: yellow;">ماموریت روزانه:</span>  <span style="color: white;">' + row[21] + ' روز</span>'
+                                        : 'بدون ماموریت/مرخصی'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    formsContainer.appendChild(link);
+                });
+            } else {
+                formsContainer.innerHTML = '<p>هیچ داده معتبری یافت نشد.</p>';
+            }
+        }
+
+        function openPopup(index) {
+            currentRowIndex = index;
+            const row = globalData[index];
+
+            document.getElementById('popup-person-name').textContent = row[2] + ' ' + row[3];
+            document.getElementById('popup-avatar').src = row[35] || 'https://via.placeholder.com/60';
+
+            // Populate input fields with current values if they exist, otherwise 0
+            document.getElementById('extra-work-manager').value = row[16] || 0; // Column 16 for Manager Overtime
+            document.getElementById('bonus-manager-percent').value = row[37] || 0; // Placeholder for Manager Bonus Percentage (new field)
+            document.getElementById('extra-work-ceo').value = row[22] || 0; // Column 22 for CEO Overtime
+            document.getElementById('bonus-ceo-percent').value = row[38] || 0; // Placeholder for CEO Bonus Percentage (new field)
+
+            // Trigger calculation to show initial values
+            calculateAndDisplayValues();
+
+            document.getElementById('popup-overlay').classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('popup-overlay').classList.remove('active');
+            currentRowIndex = -1; // Reset current row
+        }
+
+        function calculateAndDisplayValues() {
+            const row = globalData[currentRowIndex];
+            if (!row) return; // Should not happen
+
+            const baseSalary = Number(row[13]) || 0; // حقوق پایه (ستون 13)
+            const attendanceOvertime = Number(row[22]) || 0; // اضافه‌کار حضوری (ستون 22) - این مقدار از فرم می‌آید اما برای محاسبه نهایی نیاز داریم
+            const dailyWage = Number(row[15]) || 0; // مزد روزانه (ستون 15)
+
+            // Get values from popup inputs
+            const extraWorkManager = Number(document.getElementById('extra-work-manager').value) || 0;
+            const bonusManagerPercent = Number(document.getElementById('bonus-manager-percent').value) || 0;
+            const extraWorkCEO = Number(document.getElementById('extra-work-ceo').value) || 0;
+            const bonusCEOPercent = Number(document.getElementById('bonus-ceo-percent').value) || 0;
+
+            // Calculate Manager Bonus (Karaneh Modir)
+            // Assuming "ستون 23" in the image refers to an initial bonus value that gets multiplied by the percentage.
+            // If it's directly base salary * percentage, simplify this.
+            // Based on the image "ستون 23 در 22 جایگزین می گردد" and "حقوق پایه".
+            // Let's assume Manager Bonus is calculated as (Base Salary * Manager Bonus Percentage)
+            const managerBonusValue = (baseSalary * bonusManagerPercent / 100);
+            document.getElementById('calculated-bonus-manager').textContent = managerBonusValue.toLocaleString() + ' ریال';
+
+            // Calculate Manager Overtime Value
+            // "ستون 15 (مزد روزانه) ضرب در 1.4 و نتیجه در ستون 16 (نظر مدیر) جایگزین می گردد."
+            // Assuming "اضافه‌کار مدیر" (نظر مدیر) is the one we are changing (row[16])
+            const managerOvertimeValue = (dailyWage / 8) * extraWorkManager * 1.4; // hourly wage * hours * 1.4
+            document.getElementById('calculated-extra-work-manager').textContent = managerOvertimeValue.toLocaleString() + ' ریال';
+
+            // Calculate CEO Bonus (Karaneh Modir Amel)
+            // "ستون 13 (حقوق پایه) ضرب در 0.15 و نتیجه در 24 ضرب در (ستون 28 (درصد)) جایگزین می گردد."
+            // This is a bit complex based on your image. Let's assume it's `baseSalary * 0.15 * (CEO_Bonus_Percentage / 100)`
+            // If row[28] is another percentage, it gets complicated. For now, let's use `bonusCEOPercent`.
+            // "حقوق پایه: 13 / کارانه مدیر عامل: 24" - suggests 24 is the final calculated value.
+            // Let's assume the formula is (base salary * CEO bonus percentage) * 0.15 for now, if row[28] is not involved.
+            // Or if row[28] is actually 'درصد' from the image: baseSalary * (row[28]/100) * (CEO_Bonus_Percentage / 100)
+            // Given the image says "ستون 13 ضرب در 0.15 و نتیجه در 24 ضرب در (ستون 28 (درصد))", it implies:
+            // (row[13] * 0.15) * (row[28]/100) * (CEO_Bonus_Percentage / 100).
+            // Let's go with simpler interpretation: `(baseSalary * bonusCEOPercent / 100)`
+            // If 0.15 is a fixed multiplier for CEO bonus from base salary, it might be: `(baseSalary * 0.15 * (bonusCEOPercent / 100))`
+            // **Crucially, the image mentions "ستون 23 در 22 جایگزین می گردد." for Manager Bonus which is contradictory with "حقوق پایه" and percentage.
+            // And "ستون 13 ضربدر 0.15 و نتیجه در 24 ضربدر ستون 28 (درصد)" for CEO Bonus.
+            // Let's simplify these formulas based on common sense for this example. You must adjust these based on your exact business logic and column meanings.
+            // Assuming row[23] is related to manager bonus (Karaneh Modir) and row[24] is CEO bonus (Karaneh Modir Amel).
+            // Image says: "مقدار پیش فرض از ستون 23 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 23 جایگزین می گردد."
+            // So column 23 is the initial manager bonus (percentage).
+            // And "مقدار پیش فرض از ستون 28 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 28 جایگزین می گردد."
+            // So column 28 is the initial CEO bonus (percentage).
+
+            // Let's re-evaluate based on the image's text:
+            // Manager Bonus (Karaneh Modir): "مقدار پیش فرض از ستون 23 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 23 جایگزین می گردد. درصورت وجودی فقط به کاربر پیام خطا در ورودی داده شود."
+            // So, input is percentage (row[23]), output is money (row[24]?? or another col?). The image "کارانه مدیر" box shows "% 37" and "6,217,345 ریال".
+            // This suggests 37% * something = 6,217,345. Let's assume it's `Base Salary * Manager Bonus Percentage`.
+            // So Manager Bonus (Realty) = `baseSalary * (bonusManagerPercent / 100)`
+            const calculatedManagerBonus = (baseSalary * bonusManagerPercent / 100);
+            document.getElementById('calculated-bonus-manager').textContent = calculatedManagerBonus.toLocaleString() + ' ریال';
+
+            // CEO Bonus (Karaneh Modir Amel): "مقدار پیش فرض از ستون 28 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 28 جایگزین می گردد."
+            // The box shows "% 52" and "8,797,345 ریال". Again, assume `Base Salary * CEO Bonus Percentage`.
+            const calculatedCEOBonus = (baseSalary * bonusCEOPercent / 100);
+            document.getElementById('calculated-bonus-ceo').textContent = calculatedCEOBonus.toLocaleString() + ' ریال';
+
+            // Overtime Manager (Afzayesh Kar Modir): "مقدار پیش فرض از ستون 16 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 16 جایگزین می گردد."
+            // The box shows "18 ساعت" and "6,217,345 ریال". This seems to be `(Daily Wage / 8) * hours * 1.4`.
+            const calculatedManagerOvertime = (dailyWage / 8) * extraWorkManager * 1.4;
+            document.getElementById('calculated-extra-work-manager').textContent = calculatedManagerOvertime.toLocaleString() + ' ریال';
+
+            // Overtime CEO (Afzayesh Kar Modir Amel): "مقدار پیش فرض از ستون 35 متناظر دریافت می شود و سپس عدد جدید وارد شده در این قسمت در همان ستون 35 جایگزین می گردد."
+            // The box shows "18 ساعت" (which is incorrect for CEO overtime, should be `row[22]` for actual hours or a different column for manager input)
+            // Let's assume the input `extraWorkCEO` from the pop-up (which is `row[22]`) is the "اضافه کار مدیرعامل" hours.
+            const calculatedCEOOvertime = (dailyWage / 8) * extraWorkCEO * 1.4;
+            document.getElementById('calculated-extra-work-ceo').textContent = calculatedCEOOvertime.toLocaleString() + ' ریال';
+
+            // Update the display for percentage values directly
+            document.getElementById('display-bonus-manager-percent').textContent = bonusManagerPercent + ' %';
+            document.getElementById('display-bonus-ceo-percent').textContent = bonusCEOPercent + ' %';
+            document.getElementById('display-extra-work-manager-hours').textContent = extraWorkManager + ' ساعت';
+            document.getElementById('display-extra-work-ceo-hours').textContent = extraWorkCEO + ' ساعت';
+        }
+
+        function saveChanges() {
+            if (currentRowIndex === -1) return;
+
+            const row = globalData[currentRowIndex];
+
+            // Get new values from inputs
+            const newExtraWorkManager = Number(document.getElementById('extra-work-manager').value) || 0;
+            const newBonusManagerPercent = Number(document.getElementById('bonus-manager-percent').value) || 0;
+            const newExtraWorkCEO = Number(document.getElementById('extra-work-ceo').value) || 0;
+            const newBonusCEOPercent = Number(document.getElementById('bonus-ceo-percent').value) || 0;
+
+            // Update the globalData array (front-end only)
+            // Map the input values to the correct columns based on your sheet structure and image.
+            // This mapping is CRUCIAL and must be accurate for your Google Sheet.
+            // Based on image descriptions:
+            // 'اضافه‌کار مدیر' (ساعت) -> row[16] (نظر مدیر)
+            // 'کارانه مدیر' (درصد) -> row[23] (As per image text, value replacing this percentage)
+            // 'اضافه‌کار مدیرعامل' (ساعت) -> row[22] (اضافه‌کار حضوری) - *Confusion here: row[22] is also 'اضافه‌کار حضوری' for the employee. The image refers to 'مدیرعامل' for this input.*
+            //    Let's assume row[22] is indeed the value that gets updated by CEO Overtime input.
+            // 'کارانه مدیرعامل' (درصد) -> row[28] (As per image text, value replacing this percentage)
+
+            // Let's assume the numerical values that are directly input into the sheet are:
+            // Manager Overtime (hours): row[16]
+            // Manager Bonus (%): row[23]
+            // CEO Overtime (hours): row[22]
+            // CEO Bonus (%): row[28]
+
+            globalData[currentRowIndex][16] = newExtraWorkManager; // اضافه‌کار مدیر (ساعت)
+            globalData[currentRowIndex][23] = newBonusManagerPercent; // کارانه مدیر (درصد) - **Verify this column!**
+            globalData[currentRowIndex][22] = newExtraWorkCEO; // اضافه‌کار مدیرعامل (ساعت)
+            globalData[currentRowIndex][28] = newBonusCEOPercent; // کارانه مدیرعامل (درصد) - **Verify this column!**
+
+            // Update the calculated display values in the main list
+            // row[24] is 'کارانه مدیر' (ریال) in the main display. This needs to be the calculated value.
+            // row[22] is 'اضافه‌کار حضوری' which is now the CEO overtime hours.
+            // The image implies that the *calculated Rial values* are then placed back into specific columns for display.
+            // This is where you might need to reconsider your Google Sheet structure.
+            // For now, let's update the *display values* in the main `globalData` based on the calculations.
+            // This is a front-end only update for the example. For a real system, these calculated values would likely
+            // be handled by the Google Sheet itself based on the raw inputs (percentage/hours) or sent back to the server.
+
+            const baseSalary = Number(row[13]) || 0;
+            const dailyWage = Number(row[15]) || 0;
+
+            // Update the specific displayed columns based on current input values.
+            // These are the *values that are displayed on the main card*, not necessarily the raw inputs.
+            // Adjust these column numbers according to where you want the calculated values to appear on the main card.
+            // Example: If row[24] is the 'ریال' value for Manager Bonus:
+            globalData[currentRowIndex][24] = (baseSalary * newBonusManagerPercent / 100); // کارانه مدیر (ریال)
+            // Example: If row[16] is the 'ریال' value for Manager Overtime (or you want to show calculated value here):
+            // The current display uses `row[16]` for "نظر مدیر", which is an hour value.
+            // If you want to display the RIAL value, you'd need another column or change the display logic.
+            // For now, let's keep row[16] as the input hours for 'نظر مدیر'.
+            // The main card already displays `row[22]` for 'اضافه‌کار حضوری' and `row[16]` for 'نظر مدیر'.
+            // The image shows the RIAL values next to the hours in the popup.
+            // If you want these RIAL values to update in the main card, you need specific columns for them in your sheet.
+
+            // Re-render the forms to reflect changes
+            renderForms(globalData);
+
+            // Close the popup
+            closePopup();
+
+            // Refresh the page (if necessary, though renderForms handles display update)
+            // window.location.reload(); // Uncomment if a full page reload is desired
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="Logo_1.png" alt="تصویر بالای صفحه" class="header-image">
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <img id="user-avatar" src="https://via.placeholder.com/70" alt="تصویر کاربر ناشناس" class="user-avatar">
+            <h2 id="title-container" style="margin-right: 10px; font-size: 1.5em;"></h2>
+        </div>
+        <p>در صورت بروز مشکل با داخلی 150 تماس حاصل فرمایید.</p>
+        <div id="forms-container" class="loading">در حال بارگذاری داده‌ها...</div>
+    </div>
+
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-content">
+            <span class="close-button" onclick="closePopup()">&times;</span>
+            <div class="popup-avatar-section">
+                <img id="popup-avatar" src="https://via.placeholder.com/60" alt="تصویر کارمند" class="popup-avatar">
+                <h3 id="popup-person-name"></h3>
+            </div>
+            <p style="font-size: 0.9em; text-align: center; margin-bottom: 20px; color: #f0f0f0;">اعداد را وارد کنید و تغییرات را مشاهده کنید.</p>
+
+            <div class="input-group">
+                <label for="extra-work-manager">اضافه‌کار مدیر (ساعت):</label>
+                <input type="number" id="extra-work-manager" placeholder="ساعت" oninput="calculateAndDisplayValues()">
+                <div class="calculated-value" id="display-extra-work-manager-hours">0 ساعت</div>
+                <div class="calculated-value" id="calculated-extra-work-manager">0 ریال</div>
+            </div>
+
+            <div class="input-group">
+                <label for="bonus-manager-percent">کارانه مدیر (درصد):</label>
+                <input type="number" id="bonus-manager-percent" placeholder="درصد" oninput="calculateAndDisplayValues()">
+                <div class="calculated-value" id="display-bonus-manager-percent">0 %</div>
+                <div class="calculated-value" id="calculated-bonus-manager">0 ریال</div>
+            </div>
+
+            <div class="input-group">
+                <label for="extra-work-ceo">اضافه‌کار مدیرعامل (ساعت):</label>
+                <input type="number" id="extra-work-ceo" placeholder="ساعت" oninput="calculateAndDisplayValues()">
+                <div class="calculated-value" id="display-extra-work-ceo-hours">0 ساعت</div>
+                <div class="calculated-value" id="calculated-extra-work-ceo">0 ریال</div>
+            </div>
+
+            <div class="input-group">
+                <label for="bonus-ceo-percent">کارانه مدیرعامل (درصد):</label>
+                <input type="number" id="bonus-ceo-percent" placeholder="درصد" oninput="calculateAndDisplayValues()">
+                <div class="calculated-value" id="display-bonus-ceo-percent">0 %</div>
+                <div class="calculated-value" id="calculated-bonus-ceo">0 ریال</div>
+            </div>
+
+            <div class="popup-buttons">
+                <button class="save-button" onclick="saveChanges()">ثبت</button>
+                <button class="cancel-button" onclick="closePopup()">انصراف</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
