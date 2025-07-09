@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارتابل شخصی</title>
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fb;
+        }
+        .container {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 10px;
+            background-image: url("Kar_BKG.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        .header-image {
+            width: 100%;
+            max-width: 430px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: block;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-link {
+            display: block;
+            padding: 12px 20px;
+            margin: 10px 0;
+            background-color: #47138a;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .form-link:hover {
+            background-color: #3f3151;
+            transform: translateY(-2px);
+        }
+        .user-avatar, .small-avatar {
+            border-radius: 50%;
+            border: 2px solid black;
+            object-fit: cover;
+        }
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            margin-left: 2px;
+        }
+        .small-avatar {
+            width: 50px;
+            height: 50px;
+            margin-left: 2px;
+            margin-right: -5px;
+        }
+        .sub-info {
+            font-size: 0.8em;
+            color: #ffeb7e;
+            margin-top: 1px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Styles for the Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
+        .popup-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .popup-content {
+            background-color: #3f3151;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center; /* Center align text in popup content */
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .popup-overlay.active .popup-content {
+            transform: scale(1);
+        }
+        .popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align to the left to have image on right in RTL */
+            margin-bottom: 20px;
+            flex-direction: row-reverse; /* Reverse order of children for RTL, so image comes first visually */
+        }
+        .popup-header .popup-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: 10px; /* Space between avatar and name */
+        }
+        .popup-header h3 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #abf9a4;
+            margin-right: 10px; /* Space after name for RTL */
+        }
+        .popup-field {
+            margin-bottom: 15px; /* Default margin */
+            display: flex;
+            flex-direction: column; /* Stack label/input and result */
+            align-items: center; /* Center items horizontally */
+            justify-content: center;
+        }
+        .popup-field-top {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center label, input and unit */
+            margin-bottom: 5px;
+        }
+        .popup-field label {
+            margin: 0 10px; /* Space around label */
+            font-size: 1.1em;
+            color: #ffeb7e;
+            white-space: nowrap;
+        }
+        .popup-field input {
+            width: 70px; /* Smaller width for input */
+            padding: 8px; /* Slightly smaller padding */
+            border: 1px solid #555;
+            border-radius: 8px;
+            background-color: #2a2235;
+            color: white;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        .popup-field input:focus {
+            outline: none;
+            border-color: #abf9a4;
+            box-shadow: 0 0 0 3px rgba(171, 249, 164, 0.3);
+        }
+        .popup-field .unit {
+            margin: 0 10px; /* Space around unit */
+            color: white;
+        }
+        .popup-result {
+            margin-top: 10px;
+            font-size: 1.4em; /* Larger font size for result */
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+        #extra-work-result {
+            color: white; /* White color for extra work result */
+        }
+        #karaneh-result {
+            color: yellow; /* Yellow color for karaneh result */
+        }
+        .popup-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 25px;
+        }
+        .popup-buttons button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .popup-buttons button.submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .popup-buttons button.submit:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .popup-buttons button.cancel {
+            background-color: #f44336;
+            color: white;
+        }
+        .popup-buttons button.cancel:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+        /* Added space after the first field (Extra Work) */
+        .popup-field:first-of-type { /* Changed to first-of-type to target the first .popup-field correctly */
+            margin-bottom: 25px;
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <script>
+        let currentRowData = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const formsContainer = document.getElementById('forms-container');
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const titleContainer = document.getElementById('title-container');
+            const avatarContainer = document.getElementById('user-avatar');
+
+            if (!id) {
+                formsContainer.innerHTML = '<div class="error-message">شناسه‌ای ارسال نشده است.</div>';
+                return;
+            }
+
+            const prefix = "aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J6WHdUNk9LWkhwQ19pdDBRWmItQ1dJYUZ1cXZRdjRGRFhVMXd5VkNXc3ZtbHloaHdvalNMS3V0TFkzQ21TdEoyWkEvZXhlYz9pZD0=";
+            const CheckContainer = "Mvcy9BS2Z5Y2J5N3hJV2";
+            const fullAddress = atob(prefix) + id + "&key=" + CheckContainer;
+            formsContainer.innerHTML = '<div class="loading">در حال بارگذاری داده‌ها...</div>';
+
+            try {
+                const response = await fetch(fullAddress);
+                if (!response.ok) throw new Error(`خطای پاسخ: ${response.status}`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    const evaluatorName = data[0][10] || 'نام مدیر';
+                    const evaluatorImage = data[0][36] || 'https://via.placeholder.com/70';
+                    titleContainer.textContent = evaluatorName;
+                    avatarContainer.src = evaluatorImage;
+
+                    formsContainer.innerHTML = '';
+                    data.forEach(row => {
+                        const link = document.createElement('a');
+                        link.classList.add('form-link');
+                        link.dataset.rowData = JSON.stringify(row);
+                        link.onclick = (e) => {
+                            e.preventDefault();
+                            openPopup(row);
+                        };
+
+                        link.innerHTML = `
+                            <div style="display: flex; align-items: center; margin-right:-5px; margin-left:-5px">
+                                <img src="${row[35] || 'https://via.placeholder.com/50'}" class="small-avatar" alt="تصویر دوم">
+                                <div>
+                                    <span style="font-size: 1.2em; font-weight: bold;">${row[2]+' '+ row[3] || 'بدون نام'}</span>
+
+                                    <div class="sub-info">
+                                        ${row[7]
+                                            ? '<span style="color: yellow;"></span>  <span style="color: #abf9a4;">' + row[7] + ' </span>'
+                                            : 'بدون پست سازمانی'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[13]
+                                            ? '<span style="color: yellow;">حقوق پایه:</span>  <span style="color: white;">' + Number(row[13]).toLocaleString() + ' ریال</span>'
+                                            : 'بدون حقوق'}
+                                    </div>
+                                    <div class="sub-info">
+                                        ${row[24]
+                                            ? '<span style="color: yellow;">کارانه مدیر:</span>  <span style="color: white;">' + Number(row[24]).toLocaleString() + ' ریال</span>'
+                                            : 'بدون کارانه'}
+                                    </div>
+                                    <div class="sub-info">
+                                        ${row[22]
+                                            ? '<span style="color: yellow;">اضافه‌کار حضوری:</span>  <span style="color: white;">' + row[17] + ' ساعت - </span><span style="color: yellow;"> نظر مدیر:</span>  <span style="color: white;">' + row[22] + ' ساعت</span>'
+                                            : 'بدون اضافه‌کار'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[18]
+                                            ? '<span style="color: yellow;">غیبت ساعتی:</span>  <span style="color: white;">' + row[18] + ' ساعت  -   </span> <span style="color: yellow;"> روزانه:</span>  <span style="color: white;">' + row[19] + ' روز</span> '
+                                            : 'بدون غیبت'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[21]
+                                            ? '<span style="color: yellow;">مرخصی روزانه:</span>  <span style="color: white;">' + row[20] + ' روز  -   </span>  <span style="color: yellow;">ماموریت روزانه:</span>  <span style="color: white;">' + row[21] + ' روز</span>'
+                                            : 'بدون ماموریت/مرخصی'}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        formsContainer.appendChild(link);
+                    });
+                } else {
+                    formsContainer.innerHTML = '<p>هیچ داده معتبری یافت نشد.</p>';
+                }
+            } catch (error) {
+                console.error('خطا در دریافت داده‌ها:', error);
+                formsContainer.innerHTML = '<div class="error-message">خطایی در بارگذاری داده‌ها رخ داد.</div>';
+            }
+        });
+
+        function openPopup(rowData) {
+            currentRowData = rowData;
+            const popupOverlay = document.getElementById('popup-overlay');
+            const popupName = document.getElementById('popup-name');
+            const popupAvatar = document.getElementById('popup-avatar');
+            const hourInput = document.getElementById('hour-input');
+            const percentInput = document.getElementById('percent-input');
+            const extraWorkResult = document.getElementById('extra-work-result');
+            const karanehResult = document.getElementById('karaneh-result');
+
+            // Populate popup with current user's data
+            popupName.textContent = rowData[2] + ' ' + rowData[3];
+            popupAvatar.src = rowData[35] || 'https://via.placeholder.com/60';
+
+            // Set initial values for inputs
+            // Default for Extra Work (hours) is rowData[17]
+            hourInput.value = parseFloat(rowData[17]) || '';
+            // Default for Karaneh (percent) is rowData[14]. Multiply by 100 to show as percentage.
+            // Assuming rowData[14] is a decimal like 0.23 for 23%. If it's already 23 for 23%, remove * 100.
+            percentInput.value = (parseFloat(rowData[14]) * 100) || '';
+
+
+            // Initialize results with current default values
+            // Extra Work Result: rowData[17] * rowData[15]
+            const initialExtraWorkValue = (parseFloat(rowData[17]) || 0) * (parseFloat(rowData[15]) || 0);
+            extraWorkResult.textContent = Math.round(initialExtraWorkValue).toLocaleString() + ' ریال'; // Rounded
+
+            // Karaneh Result: (rowData[14] / 100) * rowData[13] -- assuming rowData[14] is like 0.23, so no /100 needed, just * rowData[13]
+            // If rowData[14] is 23 (meaning 23%), then (rowData[14] / 100) * rowData[13]
+            // We'll stick to rowData[14] as a decimal (e.g., 0.23).
+            const initialKaranehValue = (parseFloat(rowData[14]) || 0) * (parseFloat(rowData[13]) || 0);
+            karanehResult.textContent = Math.round(initialKaranehValue).toLocaleString() + ' ریال'; // Rounded
+
+
+            // Add event listeners for input changes
+            hourInput.oninput = updateCalculations;
+            percentInput.oninput = updateCalculations;
+
+            popupOverlay.classList.add('active');
+        }
+
+        function closePopup() {
+            document.getElementById('popup-overlay').classList.remove('active');
+            const percentInput = document.getElementById('percent-input');
+            const hourInput = document.getElementById('hour-input');
+            percentInput.oninput = null;
+            hourInput.oninput = null;
+            currentRowData = null;
+        }
+
+        function updateCalculations() {
+            if (!currentRowData) return;
+
+            const hourInput = document.getElementById('hour-input');
+            const percentInput = document.getElementById('percent-input');
+            const extraWorkResult = document.getElementById('extra-work-result');
+            const karanehResult = document.getElementById('karaneh-result');
+
+            const extraWorkMultiplier = parseFloat(currentRowData[15]) || 0;
+            const karanehMultiplier = parseFloat(currentRowData[13]) || 0;
+
+            const enteredHour = parseFloat(hourInput.value) || 0;
+            // Entered percentage is a whole number (e.g., 23), so divide by 100 for calculation
+            const enteredPercent = (parseFloat(percentInput.value) || 0) / 100;
+
+            // Calculate Extra Work: entered hour * column 15
+            const newExtraWorkValue = enteredHour * extraWorkMultiplier;
+            extraWorkResult.textContent = Math.round(newExtraWorkValue).toLocaleString() + ' ریال';
+
+            // Calculate Karaneh: entered percent (as decimal) * column 13
+            const newKaranehValue = enteredPercent * karanehMultiplier;
+            karanehResult.textContent = Math.round(newKaranehValue).toLocaleString() + ' ریال';
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="Logo_1.png" alt="تصویر بالای صفحه" class="header-image">
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <img id="user-avatar" src="https://via.placeholder.com/70" alt="تصویر کاربر ناشناس" class="user-avatar">
+            <h2 id="title-container" style="margin-right: 10px; font-size: 1.5em;"></h2>
+        </div>
+        <p>در صورت بروز مشکل با داخلی 150 تماس حاصل فرمایید.</p>
+        <div id="forms-container" class="loading">در حال بارگذاری داده‌ها...</div>
+    </div>
+
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-header">
+                <img id="popup-avatar" src="https://via.placeholder.com/60" alt="تصویر کاربر" class="popup-avatar">
+                <h3 id="popup-name"></h3>
+            </div>
+
+            <div class="popup-field">
+                <div class="popup-field-top">
+                    <label for="hour-input">اضافه کار مدیر:</label>
+                    <input type="number" id="hour-input" placeholder="ساعت">
+                    <span class="unit">ساعت</span>
+                </div>
+                <div class="popup-result" id="extra-work-result">
+                    ۰ ریال
+                </div>
+            </div>
+
+            <div class="popup-field">
+                <div class="popup-field-top">
+                    <label for="percent-input">کارانه مدیر:</label>
+                    <input type="number" id="percent-input" placeholder="درصد">
+                    <span class="unit">%</span>
+                </div>
+                <div class="popup-result" id="karaneh-result">
+                    ۰ ریال
+                </div>
+            </div>
+
+            <div class="popup-buttons">
+                <button class="submit" onclick="alert('ثبت شد!'); closePopup();">ثبت</button>
+                <button class="cancel" onclick="closePopup();">انصراف</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
