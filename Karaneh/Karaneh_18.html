@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارتابل شخصی</title>
+    <style>
+        body {
+            font-family: 'Vazir', sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fb;
+        }
+        .container {
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 10px;
+            background-image: url("Kar_BKG.jpg"); /* مطمئن شوید این فایل موجود است */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-out;
+        }
+        .header-image {
+            width: 100%;
+            max-width: 430px;
+            height: auto;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            display: block;
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-link {
+            display: block;
+            padding: 12px 20px;
+            margin: 10px 0;
+            background-color: #47138a;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .form-link:hover {
+            background-color: #3f3151;
+            transform: translateY(-2px);
+        }
+        .user-avatar, .small-avatar {
+            border-radius: 50%;
+            border: 2px solid black;
+            object-fit: cover;
+        }
+        .user-avatar {
+            width: 70px;
+            height: 70px;
+            margin-left: 2px;
+        }
+        .small-avatar {
+            width: 50px;
+            height: 50px;
+            margin-left: 5px;
+            margin-right: -5px;
+        }
+        .sub-info {
+            font-size: 0.8em;
+            color: #ffeb7e;
+            margin-top: 1px;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Styles for the Popup */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s ease;
+        }
+        .popup-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .popup-content {
+            background-color: #3f3151; /* پس‌زمینه اصلی پاپ‌آپ */
+            padding: 15px; /* کاهش padding برای جمع‌وجورتر شدن */
+            border-radius: 15px;
+            width: 350%;
+            max-width: 350px; /* کاهش حداکثر عرض */
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* فاصله بین بخش‌های داخلی */
+        }
+        .popup-overlay.active .popup-content {
+            transform: scale(1);
+        }
+        .popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* برای وسط‌چین کردن عکس و نام */
+            margin-bottom: 10px;
+
+        }
+        .popup-header .popup-avatar {
+            width: 40px; /* اندازه کوچک‌تر آواتار */
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+            margin-left: 8px; /* فاصله بین آواتار و نام */
+        }
+        .popup-header h3 {
+            margin: 0;
+            font-size: 1.2em; /* فونت کوچک‌تر برای نام */
+            color: white;
+            margin-right: 8px; /* فاصله بعد از نام */
+        }
+        .popup-section {
+            background-color: rgba(0, 0, 0, 0.3); /* پس‌زمینه نیمه‌شفاف برای هر بلوک (اضافه‌کار/کارانه) */
+            padding: 5px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .popup-field {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* برای وسط‌چین کردن لیبل، ورودی و واحد */
+            gap: 8px;
+            width: 100%;
+        }
+        .popup-field label {
+            font-size: 0.9em;
+            color: #ffeb7e;
+            white-space: nowrap;
+        }
+        .popup-field input {
+            width: 50px; /* عرض کوچک‌تر کادر ورودی */
+            padding: 5px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #2a2235;
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            direction: ltr;
+            font-weight: bold;
+        }
+        .popup-field input:focus {
+            outline: none;
+            border-color: #abf9a4;
+            box-shadow: 0 0 0 3px rgba(171, 249, 164, 0.3);
+        }
+        .popup-field .unit {
+            color: white;
+            font-size: 1.2em;
+            font-weight:bold;
+        }
+        .popup-result {
+            margin-top: 5px;
+            font-size: 1.1em; /* فونت بزرگتر برای نتیجه */
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+        #extra-work-result {
+            color: yellow; /* رنگ سفید برای نتیجه اضافه‌کار */
+        }
+        #karaneh-result {
+            color: yellow; /* رنگ زرد برای نتیجه کارانه */
+        }
+        .popup-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .popup-buttons button {
+            padding: 6px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .popup-buttons button.submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .popup-buttons button.submit:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        .popup-buttons button.cancel {
+            background-color: #f44336;
+            color: white;
+        }
+        .popup-buttons button.cancel:hover {
+            background-color: #da190b;
+            transform: translateY(-2px);
+        }
+        /* فاصله بیشتر بعد از بخش اول (اضافه کار) */
+        .popup-section:first-of-type {
+            margin-bottom: 15px;
+        }
+
+
+/* حذف فلش‌های input type="number" در Chrome، Safari، Edge */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* حذف فلش در Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+    </style>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/font-face.css" rel="stylesheet" type="text/css" />
+    <script>
+        let currentRowData = null; // متغیری برای نگهداری داده‌های سطر فعلی
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const formsContainer = document.getElementById('forms-container');
+            const params = new URLSearchParams(window.location.search);
+            const evaluatorIdFromUrl = params.get('id'); // دریافت ID امتیازدهنده از URL
+            const titleContainer = document.getElementById('title-container');
+            const avatarContainer = document.getElementById('user-avatar');
+
+            if (!evaluatorIdFromUrl) {
+                formsContainer.innerHTML = '<div class="error-message">شناسه‌ای (امتیازدهنده) ارسال نشده است.</div>';
+                return;
+            }
+
+            // آدرس API برای خواندن داده‌ها (doGet)
+            const getApiUrl = "https://script.google.com/macros/s/AKfycbxuPryPSRMx_P2cFTE-b0wPyvshiMvfGiBZbDL3cz0gVQklpni9T-_MzTdW0Pf4RGfc/exec";
+            const fullGetAddress = getApiUrl + "?id=" + evaluatorIdFromUrl; // ارسال ID امتیازدهنده به doGet
+            
+            formsContainer.innerHTML = '<div class="loading">در حال بارگذاری داده‌ها...</div>';
+
+            try {
+                const response = await fetch(fullGetAddress);
+                if (!response.ok) throw new Error(`خطای پاسخ: ${response.status}`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    // تنظیم نام و تصویر مدیر (امتیازدهنده) از اولین سطر داده‌ها
+                    const evaluatorName = data[0][10] || 'نام مدیر'; // فرض بر این است که نام مدیر در ستون 11 (ایندکس 10) است
+                    const evaluatorImage = data[0][39] || 'https://via.placeholder.com/70'; // فرض بر این است که تصویر مدیر در ستون 40 (ایندکس 39) است
+                    titleContainer.textContent = evaluatorName;
+                    avatarContainer.src = evaluatorImage;
+
+                    formsContainer.innerHTML = ''; // پاک کردن پیام "در حال بارگذاری"
+                    data.forEach(row => {
+                        const link = document.createElement('a');
+                        link.classList.add('form-link');
+                        // ذخیره کل داده‌های سطر به عنوان یک صفت داده (data attribute)
+                        // **مهم:** هر دکمه باید داده‌های سطر *خودش* را نگه دارد تا `currentRowData` درست ست شود.
+                        link.dataset.rowData = JSON.stringify(row);
+                        link.onclick = (e) => {
+                            e.preventDefault(); // جلوگیری از رفتار پیش‌فرض لینک
+                            openPopup(row); // فراخوانی تابع باز کردن پاپ‌آپ با داده‌های سطر فعلی (امتیازگیرنده)
+                        };
+
+                        // ساختار HTML داخلی هر دکمه (کارت کاربر)
+                        link.innerHTML = `
+                            <div style="display: flex; align-items: center; margin-right:-5px; margin-left:-5px; line-height: 1.8;">
+                                <img src="${row[38] || 'https://via.placeholder.com/50'}" class="small-avatar" alt="تصویر دوم">
+                                <div>
+                                    <span style="font-size: 1.2em; font-weight: bold;">${row[2]+' '+ row[3] || 'بدون نام'}</span>
+
+                                    <div class="sub-info">
+                                        ${row[7]
+                                            ? '<span style="color: yellow;"></span>  <span style="color: #abf9a4;">' + row[7] + ' </span>'
+                                            : 'بدون پست سازمانی'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[16]
+                                            ? '<span style="color: yellow;">حقوق پایه: </span>  <span style="color: white;">' + Number(row[16]).toLocaleString() + ' ریال</span>'
+                                            : 'بدون حقوق'}
+                                    </div>
+                                    <div class="sub-info">
+                                        ${row[28]
+                                            ? '<span style="color: yellow;">اضافه‌کار مدیر: </span>  <span style="color: white;">' +  Math.round(Number(row[28])).toLocaleString()  + ' ریال   </span>  <span style="color: #abf9a4;">' + row[26] + ' ساعت </span>'
+                                            : 'بدون کارانه'}
+                                    </div>
+									
+                                    <div class="sub-info">
+                                        ${row[29]
+					  ? '<span style="color: yellow;">کارانه مدیر: </span>  <span style="color: white;">' + Math.round(Number(row[29])).toLocaleString() + ' ریال   </span>  <span style="color: #abf9a4;">' +  Math.round(row[27]*100) + '%</span>'
+                                            : 'بدون کارانه'}
+                                    </div>
+									
+                                    <div class="sub-info">
+                                        ${row[20]
+                                            ? '<span style="color: yellow;">اضافه‌کار حضوری: </span>  <span style="color: white;">' + row[20] + ' ساعت  -  </span><span style="color: yellow;"> سقف: </span>  <span style="color: white;">' + row[19] + ' ساعت</span>'
+                                            : 'بدون اضافه‌کار'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[22]
+                                            ? '<span style="color: yellow;">غیبت ساعتی: </span>  <span style="color: white;">' + row[22] + ' ساعت  -  </span> <span style="color: yellow;"> روزانه:</span>  <span style="color: white;">' + row[23] + ' روز</span> '
+                                            : 'بدون غیبت'}
+                                    </div>
+
+                                    <div class="sub-info">
+                                        ${row[24]
+                                            ? '<span style="color: yellow;">مرخصی: </span>  <span style="color: white;">' + row[24] + ' روز  -  </span>  <span style="color: yellow;">ماموریت: </span>  <span style="color: white;">' + row[25] + ' روز</span>'
+                                            : 'بدون ماموریت/مرخصی'}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        formsContainer.appendChild(link);
+                    });
+                } else {
+                    formsContainer.innerHTML = '<p>هیچ داده معتبری یافت نشد.</p>';
+                }
+            } catch (error) {
+                console.error('خطا در دریافت داده‌ها:', error);
+                formsContainer.innerHTML = '<div class="error-message">خطایی در بارگذاری داده‌ها رخ داد.</div>';
+            }
+        });
+
+        // تابع باز کردن پاپ‌آپ
+        function openPopup(rowData) {
+            currentRowData = rowData; // **مهم:** اینجا `rowData` صحیح مربوط به دکمه کلیک شده (امتیازگیرنده) ذخیره می‌شود
+            const popupOverlay = document.getElementById('popup-overlay');
+            const popupName = document.getElementById('popup-name');
+            const popupAvatar = document.getElementById('popup-avatar');
+            const hourInput = document.getElementById('hour-input');
+            const percentInput = document.getElementById('percent-input');
+            const extraWorkResult = document.getElementById('extra-work-result');
+            const karanehResult = document.getElementById('karaneh-result');
+
+            // پر کردن هدر پاپ‌آپ با اطلاعات کاربر فعلی (امتیازگیرنده)
+            popupName.textContent = rowData[2] + ' ' + rowData[3]; // نام و نام خانوادگی از ستون 3 و 4 (ایندکس 2 و 3)
+            popupAvatar.src = rowData[38] || 'https://via.placeholder.com/60'; // تصویر کاربر از ستون 39 (ایندکس 38)
+
+            // تنظیم مقادیر اولیه برای کادرهای ورودی بر اساس ستون‌های مشخص شده
+            // اضافه‌کار مدیر از ستون 27 (ایندکس 26)
+            hourInput.value = parseFloat(rowData[26]) || ''; 
+            // کارانه مدیر از ستون 28 (ایندکس 27) (در 100 ضرب می‌شود تا به صورت درصدی نمایش داده شود)
+            percentInput.value = (parseFloat(rowData[27]) * 100) || '';
+
+            // محاسبه و نمایش نتایج اولیه بر اساس مقادیر پیش‌فرض
+            // نتیجه اضافه‌کار: مقدار ستون 27 (ایندکس 26) * مقدار ستون 19 (ایندکس 18)
+            const initialExtraWorkValue = (parseFloat(rowData[26]) || 0) * (parseFloat(rowData[18]) || 0);
+            extraWorkResult.textContent = Math.round(initialExtraWorkValue).toLocaleString() + ' ریال';
+
+            // نتیجه کارانه: مقدار ستون 28 (ایندکس 27) * مقدار ستون 17 (ایندکس 16)
+            const initialKaranehValue = (parseFloat(rowData[27]) || 0) * (parseFloat(rowData[16]) || 0);
+            karanehResult.textContent = Math.round(initialKaranehValue).toLocaleString() + ' ریال';
+
+            // اضافه کردن شنونده رویداد (event listener) برای تغییرات کادرهای ورودی
+            hourInput.oninput = updateCalculations;
+            percentInput.oninput = updateCalculations;
+
+            popupOverlay.classList.add('active'); // نمایش پاپ‌آپ
+        }
+
+        // تابع بستن پاپ‌آپ
+        function closePopup() {
+            document.getElementById('popup-overlay').classList.remove('active'); // مخفی کردن پاپ‌آپ
+            // حذف شنونده‌های رویداد برای جلوگیری از مشکلات احتمالی
+            const percentInput = document.getElementById('percent-input');
+            const hourInput = document.getElementById('hour-input');
+            percentInput.oninput = null;
+            hourInput.oninput = null;
+            currentRowData = null; // پاک کردن داده‌های سطر ذخیره شده
+        }
+
+        // تابع به‌روزرسانی محاسبات به صورت زنده
+        function updateCalculations() {
+            if (!currentRowData) return; // اگر داده‌ای برای سطر انتخاب نشده، کاری انجام نده
+
+            const hourInput = document.getElementById('hour-input');
+            const percentInput = document.getElementById('percent-input');
+            const extraWorkResult = document.getElementById('extra-work-result');
+            const karanehResult = document.getElementById('karaneh-result');
+
+            // دریافت ضرایب (مضرب‌ها) از داده‌های سطر
+            const extraWorkMultiplier = parseFloat(currentRowData[18]) || 0; // ضریب اضافه‌کار از ستون 19 (ایندکس 18)
+            const karanehMultiplier = parseFloat(currentRowData[16]) || 0; // ضریب کارانه (حقوق پایه) از ستون 17 (ایندکس 16)
+
+            const enteredHour = parseFloat(hourInput.value) || 0; // ساعت وارد شده توسط کاربر
+            // درصد وارد شده توسط کاربر (مثلاً 23) را بر 100 تقسیم می‌کند تا به اعشار (0.23) تبدیل شود
+            const enteredPercent = (parseFloat(percentInput.value) || 0) / 100;
+
+            // محاسبه جدید اضافه‌کار: ساعت وارد شده * ضریب اضافه‌کار
+            const newExtraWorkValue = enteredHour * extraWorkMultiplier;
+            extraWorkResult.textContent = Math.round(newExtraWorkValue).toLocaleString() + ' ریال'; // گرد کردن و نمایش
+
+            // محاسبه جدید کارانه: درصد وارد شده (به صورت اعشاری) * ضریب کارانه
+            const newKaranehValue = enteredPercent * karanehMultiplier;
+            karanehResult.textContent = Math.round(newKaranehValue).toLocaleString() + ' ریال'; // گرد کردن و نمایش
+        }
+
+
+        async function handleSubmit() {
+            const hourInput = parseFloat(document.getElementById('hour-input').value) || 0;
+            const percentInput = parseFloat(document.getElementById('percent-input').value) || 0;
+            const row = currentRowData; // **currentRowData** حاوی داده‌های سطر دقیقاً همان فردی است که دکمه‌اش کلیک شده
+
+            // اعتبارسنجی ورودی‌ها با استفاده از maxHour و maxPercent از داده‌های سطر
+            // ستون 20 = حداکثر اضافه‌کار (ایندکس 19)
+            // ستون 18 = سقف کارانه (ایندکس 17)
+            const maxHour = parseFloat(row[19]) || 0;
+            const maxPercent = parseFloat(row[17]) * 100 || 0;
+
+
+            if (hourInput < 0 || hourInput > maxHour) {
+                alert("مقدار واردشده برای اضافه‌کار نامعتبر است. لطفاً عددی بین 0 تا " + maxHour + " وارد کنید.");
+                return;
+            }
+
+            if (percentInput < 0 || percentInput > maxPercent) {
+                alert("مقدار واردشده برای کارانه نامعتبر است. لطفاً عددی بین 0 تا " + maxPercent + " وارد کنید.");
+                return;
+            }
+
+            // آدرس API برای ارسال داده‌ها (doPost)
+            const postApiUrl = "https://script.google.com/macros/s/AKfycbxuPryPSRMx_P2cFTE-b0wPyvshiMvfGiBZbDL3cz0gVQklpni9T-_MzTdW0Pf4RGfc/exec";
+            
+            // ساخت FormData برای ارسال داده‌ها با متد POST
+            const formData = new URLSearchParams();
+            // **تغییر مهم:** ارسال ID امتیازگیرنده (فردی که در پاپ‌آپ باز شده) از ستون 14 (ایندکس 13)
+            formData.append('evaluatedPersonId', row[13]); 
+            
+            // ارسال ID امتیازدهنده (از URL اصلی صفحه) برای تأیید اعتبار یا فیلتر دقیق‌تر در doPost
+            const params = new URLSearchParams(window.location.search);
+            const evaluatorIdFromUrl = params.get('id'); // دریافت ID امتیازدهنده از URL
+            formData.append('evaluatorId', evaluatorIdFromUrl);
+
+            formData.append('extraWork', hourInput); // مقدار اضافه‌کار
+            formData.append('karaneh', percentInput); // مقدار کارانه (درصد)
+
+            try {
+                const response = await fetch(postApiUrl, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+
+                if (!response.ok) throw new Error(`خطای پاسخ سرور: ${response.status}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    // رفرش صفحه پس از ثبت موفقیت آمیز
+                    window.location.reload(); 
+                } else {
+                    alert("خطا در ثبت: " + result.error);
+                }
+            } catch (error) {
+                console.error("خطا در ارسال داده‌ها:", error);
+                alert("خطایی در ارسال داده‌ها رخ داد: " + error.message);
+            }
+
+            // closePopup(); // این خط را حذف کردیم چون صفحه رفرش می‌شود و نیازی به بستن دستی پاپ‌آپ نیست.
+        }
+
+
+    </script>
+</head>
+<body>
+
+    <div class="container">
+
+        <img src="Logo_1.png" alt="تصویر بالای صفحه" class="header-image">
+        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <img id="user-avatar" src="https://via.placeholder.com/70" alt="تصویر کاربر ناشناس" class="user-avatar">
+            <h2 id="title-container" style="margin-right: 10px; font-size: 1.5em;"></h2>
+        </div>
+        <p>در صورت بروز مشکل با داخلی 150 تماس حاصل فرمایید.</p>
+        <div id="forms-container" class="loading">در حال بارگذاری داده‌ها...</div>
+    </div>
+
+    <div id="popup-overlay" class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-header">
+                <img id="popup-avatar" src="https://via.placeholder.com/60" alt="تصویر کاربر" class="popup-avatar">
+                <h3 id="popup-name"></h3>
+            </div>
+
+            <div class="popup-section">
+                <h4 style="color: #abf9a4; margin-bottom: 8px; font-size: 1.2em; margin-top:5px;">اضافه کار مدیر</h4>
+                <div class="popup-field">
+<input type="number" id="hour-input" placeholder="ساعت">
+                    <span class="unit">ساعت</span>
+                </div>
+                <div class="popup-result" id="extra-work-result">
+                    ۰ ریال
+                </div>
+            </div>
+
+            <div class="popup-section">
+                <h4 style="color: #abf9a4; margin-bottom: 8px; font-size: 1.2em; margin-top:5px;">کارانه مدیر</h4>
+                <div class="popup-field">
+<input type="number" id="percent-input" placeholder="درصد">
+                    <span class="unit">٪</span>
+                </div>
+                <div class="popup-result" id="karaneh-result">
+                    ۰ ریال
+                </div>
+            </div>
+
+            <div class="popup-buttons">
+                <button class="submit" onclick="handleSubmit()">ثبت</button>
+                <button class="cancel" onclick="closePopup();">انصراف</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
