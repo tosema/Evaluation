@@ -26,9 +26,13 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      transition: opacity 1.5s ease;
     }
 
-    /* Image with countdown overlay */
+    #splash.fade-out {
+      opacity: 0;
+    }
+
     .splash-content {
       position: relative;
       max-width: 500px;
@@ -46,13 +50,12 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 150px;
+      font-size: 200px;
       font-weight: bold;
       color: #000000c4;
       text-shadow: 2px 2px 8px white;
     }
 
-    /* Main content hidden initially */
     #main-content {
       display: none;
       text-align: center;
@@ -84,7 +87,7 @@
 </head>
 <body>
 
-  <!-- Splash screen with logo and countdown -->
+  <!-- Splash screen -->
   <div id="splash">
     <div class="splash-content">
       <img src="LogoBef.jpg" alt="لوگو">
@@ -92,7 +95,7 @@
     </div>
   </div>
 
-  <!-- Main content (your original code) -->
+  <!-- Main content (original) -->
   <div id="main-content">
     <img src="BonEvaDoc.jpg" alt="خوش آمدید">
     <div>
@@ -112,14 +115,21 @@
         countdownElement.textContent = counter;
       } else {
         clearInterval(interval);
-        splash.style.display = 'none';
-        mainContent.style.display = 'block';
 
-        // اجرای کد اصلی بدون تغییر
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        const evaluationLink = document.getElementById('evaluation-link');
-        evaluationLink.href = `BonEvaRun.html`;
+        // شروع fade-out
+        splash.classList.add('fade-out');
+
+        // پس از پایان transition (1.5 ثانیه)، محتوای اصلی نمایش داده شود
+        setTimeout(() => {
+          splash.style.display = 'none';
+          mainContent.style.display = 'block';
+
+          // اجرای کد اصلی بدون تغییر
+          const urlParams = new URLSearchParams(window.location.search);
+          const id = urlParams.get('id');
+          const evaluationLink = document.getElementById('evaluation-link');
+          evaluationLink.href = `BonEvaRun.html`;
+        }, 1500); // مدت زمان fade
       }
     }, 1000);
   </script>
