@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EvaHome</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+  <style>
+    body {
+      font-family: 'Vazir', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background-color: #fff;
+    }
+
+    /* Splash screen */
+    #splash {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 1.5s ease;
+    }
+
+    #splash.fade-out {
+      opacity: 0;
+    }
+
+    .splash-content {
+      position: relative;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .splash-content img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #countdown {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 100px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 2px 8px white;
+      display: none; /* ابتدا مخفی است */
+      z-index: 10;
+    }
+
+    /* Main content */
+    #main-content {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      text-align: center;
+    }
+
+    #main-content.fade-in {
+      opacity: 1;
+    }
+
+    #main-content img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #b54604;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background-color: #913905;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Splash screen -->
+  <div id="splash">
+    <div class="splash-content">
+      <img id="splash-image" src="LogoBef.jpg" alt="لوگو">
+      <div id="countdown">5</div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div id="main-content">
+    <img src="BonEvaDoc.jpg" alt="خوش آمدید">
+    <div>
+      <a id="evaluation-link" class="btn" href="#">ورود به سامانه</a>
+    </div>
+  </div>
+
+  <script>
+    // پس از لود کامل DOM
+    document.addEventListener("DOMContentLoaded", function () {
+      const splashImage = document.getElementById('splash-image');
+      const countdownElement = document.getElementById('countdown');
+      const splash = document.getElementById('splash');
+      const mainContent = document.getElementById('main-content');
+
+      // منتظر لود کامل تصویر splash بمان
+      splashImage.onload = function () {
+        countdownElement.style.display = 'block'; // اکنون نمایش داده شود
+
+        let counter = 5;
+        countdownElement.textContent = counter;
+
+        const interval = setInterval(() => {
+          counter--;
+          if (counter >= 0) {
+            countdownElement.textContent = counter;
+          } else {
+            clearInterval(interval);
+
+            // fade out صفحه splash
+            splash.classList.add('fade-out');
+
+            // پس از پایان ترنزیشن، صفحه اصلی را با fade-in نمایش بده
+            setTimeout(() => {
+              splash.style.display = 'none';
+              mainContent.classList.add('fade-in');
+
+              // اجرای کد اصلی بدون تغییر
+              const urlParams = new URLSearchParams(window.location.search);
+              const id = urlParams.get('id');
+              const evaluationLink = document.getElementById('evaluation-link');
+              evaluationLink.href = `BonEvaRun.html`;
+            }, 1500);
+          }
+        }, 1000);
+      };
+
+      // اگر تصویر از قبل در کش مرورگر لود شده باشد (onload اجرا نشود)
+      if (splashImage.complete) {
+        splashImage.onload(); // به‌صورت دستی trigger شود
+      }
+    });
+  </script>
+</body>
+</html>
