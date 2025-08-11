@@ -1,34 +1,57 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>ویدیو تمام صفحه</title>
-<style>
-  /* صفحه و بدنه بدون حاشیه و پر ارتفاع */
-  html, body {
-    margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: black;
-  }
-  /* ویدیو کل صفحه رو می‌پوشاند */
-  video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: auto;
-    height: auto;
-    min-width: 100%;
-    min-height: 100%;
-    transform: translate(-50%, -50%);
-    object-fit: cover; /* حفظ نسبت تصویر + پوشش کامل */
-    z-index: -1;
-    background-color: black;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پخش فیلم تمام‌صفحه</title>
+    <style>
+        /* تنظیمات اصلی برای پوشش کامل صفحه */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* جلوگیری از اسکرول‌بار */
+            background-color: #000;
+        }
+
+        /* استایل ویدیو به عنوان پس‌زمینه */
+        #myVideo {
+            position: fixed; /* ثابت نگه داشتن ویدیو در پس‌زمینه */
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%); /* مرکز قرار دادن ویدیو */
+            object-fit: cover; /* پوشش کامل فضا با حفظ نسبت تصویر */
+            z-index: -1; /* قرار دادن ویدیو در پشت تمام محتوا */
+        }
+
+        /* برای موبایل، جهت نمایش بهتر */
+        @media (orientation: landscape) {
+            #myVideo {
+                width: 100vw;
+                height: 100vh;
+            }
+        }
+    </style>
 </head>
 <body>
-  <video autoplay muted loop playsinline>
-    <source src="EvaMovie.mp4" type="video/mp4" />
-    مرورگر شما ویدیو را پشتیبانی نمی‌کند.
-  </video>
+
+<video id="myVideo" src="EvaMovie.mp4" autoplay muted loop playsinline></video>
+
+<script>
+    // مدیریت پخش خودکار به صورت ایمن
+    document.addEventListener('DOMContentLoaded', () => {
+        const video = document.getElementById('myVideo');
+        video.play().catch(error => {
+            console.log('Autoplay was prevented. User interaction might be needed.');
+            // در صورتی که پخش خودکار مسدود شد، می‌توان یک دکمه پخش به کاربر نمایش داد.
+        });
+    });
+</script>
+
 </body>
 </html>
