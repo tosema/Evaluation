@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>پخش ویدئو تمام‌صفحه</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: black;
+      overflow: hidden;
+    }
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* پر کردن کامل صفحه */
+      background: black;
+    }
+  </style>
+</head>
+<body>
+  <video src="EvaMovie.mp4" autoplay loop muted playsinline></video>
+</body>
+</html>
