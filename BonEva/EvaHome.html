@@ -1,46 +1,34 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پخش فیلم تمام‌صفحه</title>
-    <style>
-        /* تنظیمات اصلی برای پوشش کامل صفحه */
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden; /* جلوگیری از اسکرول‌بار */
-            background-color: #000;
-        }
-
-        /* استایل ویدیو برای سازگاری کامل */
-        #myVideo {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* پوشش کامل فضا با حفظ نسبت تصویر */
-            z-index: -1; /* قرار دادن ویدیو در پس‌زمینه */
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>ویدیو تمام صفحه</title>
+<style>
+  /* صفحه و بدنه بدون حاشیه و پر ارتفاع */
+  html, body {
+    margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: black;
+  }
+  /* ویدیو کل صفحه رو می‌پوشاند */
+  video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* حفظ نسبت تصویر + پوشش کامل */
+    z-index: -1;
+    background-color: black;
+  }
+</style>
 </head>
 <body>
-
-<video id="myVideo" src="EvaMovie.mp4" autoplay muted loop playsinline></video>
-
-<script>
-    // مدیریت پخش خودکار به صورت ایمن
-    document.addEventListener('DOMContentLoaded', () => {
-        const video = document.getElementById('myVideo');
-        video.play().catch(error => {
-            console.log('Autoplay was prevented. User interaction might be needed.');
-            // در صورت مسدود شدن پخش خودکار، می‌توان یک پیام یا دکمه به کاربر نمایش داد.
-        });
-    });
-</script>
-
+  <video autoplay muted loop playsinline>
+    <source src="EvaMovie.mp4" type="video/mp4" />
+    مرورگر شما ویدیو را پشتیبانی نمی‌کند.
+  </video>
 </body>
 </html>
