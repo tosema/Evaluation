@@ -1,32 +1,61 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>پخش ویدئو تمام‌صفحه</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-       width: 100%; 
-      background: black;
-      overflow: hidden;
-    }
-    video {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      /* object-fit: cover; /* پر کردن کامل صفحه */
-      background: black;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پخش فیلم تمام‌صفحه</title>
+    <style>
+        /* تنظیمات اصلی برای پوشش کامل صفحه */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        /* استایل کانتینر ویدیو */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        /* استایل ویدیو برای سازگاری کامل با تمام ابعاد */
+        #myVideo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            /* اطمینان از پوشش کامل صفحه بدون تغییر نسبت تصویر */
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
-  <video src="EvaMovie.mp4" autoplay loop muted playsinline></video>
+
+<div class="video-container">
+    <video id="myVideo" src="EvaMovie.mp4" autoplay muted loop playsinline></video>
+</div>
+
+<script>
+    // مدیریت پخش خودکار به صورت ایمن
+    document.addEventListener('DOMContentLoaded', () => {
+        const video = document.getElementById('myVideo');
+        video.play().catch(error => {
+            console.log('Autoplay was prevented. User interaction might be needed.');
+        });
+    });
+</script>
+
 </body>
 </html>
-
-
