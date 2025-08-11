@@ -1,43 +1,46 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پخش فیلم EvaMovie</title>
+    <title>پخش فیلم تمام‌صفحه</title>
     <style>
-        body {
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        /* تنظیمات اصلی برای پوشش کامل صفحه */
+        body, html {
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .video-container {
+            padding: 0;
             width: 100%;
-            max-width: 800px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: #fff;
+            height: 100%;
+            overflow: hidden; /* جلوگیری از اسکرول‌بار */
+            background-color: #000;
         }
-        video {
+
+        /* استایل ویدیو برای سازگاری کامل */
+        #myVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            display: block;
+            height: 100%;
+            object-fit: cover; /* پوشش کامل فضا با حفظ نسبت تصویر */
+            z-index: -1; /* قرار دادن ویدیو در پس‌زمینه */
         }
     </style>
 </head>
 <body>
 
-    <div class="video-container">
-        <video controls playsinline>
-            <source src="EvaMovie.mp4" type="video/mp4">
-            مرورگر شما از تگ video پشتیبانی نمی‌کند.
-        </video>
-    </div>
+<video id="myVideo" src="EvaMovie.mp4" autoplay muted loop playsinline></video>
+
+<script>
+    // مدیریت پخش خودکار به صورت ایمن
+    document.addEventListener('DOMContentLoaded', () => {
+        const video = document.getElementById('myVideo');
+        video.play().catch(error => {
+            console.log('Autoplay was prevented. User interaction might be needed.');
+            // در صورت مسدود شدن پخش خودکار، می‌توان یک پیام یا دکمه به کاربر نمایش داد.
+        });
+    });
+</script>
 
 </body>
 </html>
