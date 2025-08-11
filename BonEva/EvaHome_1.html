@@ -1,120 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>پخش تمام‌صفحه ویدئو</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>پخش ویدئو EvaMovie</title>
   <style>
-    :root { --vh: 1vh; } /* با JS مقداردهی می‌شود */
     html, body {
       height: 100%;
       margin: 0;
-      background: #000;
-      -webkit-font-smoothing: antialiased;
+      background: black;
     }
-
-    /* کانتینر ویدئو که همیشه کل صفحه را می‌پوشاند */
-    .video-wrap {
-      position: fixed;
-      inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    video {
       width: 100%;
-      height: calc(var(--vh, 1vh) * 100);
-      overflow: hidden;
-      background: black;
-      z-index: 0;
-    }
-
-    /* خود ویدئو: با ترکیب min-width/min-height و translate مرکزی، در همه مرورگرها کامل پر می‌شود */
-    .video-wrap video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      object-fit: cover; /* مرورگرهای جدید از این استفاده می‌کنند */
-      background: black;
-      display: block;
-    }
-
-    /* اگر autoplay بلوک شد، یک دکمه می‌آید */
-    .play-overlay {
-      position: fixed;
-      inset: 0;
-      display: none; /* نمایش پیدا می‌کند وقتی نیاز باشد */
-      align-items: center;
-      justify-content: center;
-      z-index: 5;
-      background: rgba(0,0,0,0.25);
-    }
-    .play-overlay button {
-      padding: 12px 18px;
-      font-size: 18px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      background: white;
-    }
-
-    /* متن جایگزین برای مرورگرهای خیلی قدیمی */
-    .fallback {
-      color: #fff;
-      text-align: center;
-      padding-top: 20px;
+      height: 100%;
+      object-fit: cover; /* یا contain اگر می‌خواهید کل ویدئو دیده شود */
     }
   </style>
 </head>
 <body>
-  <div class="video-wrap" id="wrap">
-    <video id="bgVideo" preload="auto" loop muted playsinline webkit-playsinline crossorigin="anonymous" poster="">
-      <source src="EvaMovie.mp4" type="video/mp4">
-      مرورگر شما ویدئو را پشتیبانی نمی‌کند.
-    </video>
-  </div>
-
-  <div class="play-overlay" id="overlay" aria-hidden="true">
-    <button id="playBtn" aria-label="پخش ویدئو">برای پخش کلیک کنید</button>
-  </div>
-
-  <script>
-    // 1) موبایل: fix برای 100vh (نوار آدرس مرورگر)
-    function setVh() {
-      document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
-    }
-    setVh();
-    window.addEventListener('resize', setVh);
-
-    // 2) تلاش برای پخش خودکار (بسیاری از مرورگرها فقط وقتی ویدئو muted باشد اجازه autoplay می‌دهند)
-    const video = document.getElementById('bgVideo');
-    const overlay = document.getElementById('overlay');
-    const playBtn = document.getElementById('playBtn');
-
-    // تضمین اینکه برای تست autoplay ویدئو در حالت muted هست
-    video.muted = true;
-
-    // سعی می‌کنیم پخش خودکار را اجرا کنیم؛ اگر بلوک شد، overlay ظاهر می‌شود تا کاربر تَپ کند
-    video.play().then(() => {
-      // موفق: چیزی نشان نده
-      overlay.style.display = 'none';
-    }).catch((err) => {
-      // autoplay بلوک شده — دکمه نمایش داده شود
-      overlay.style.display = 'flex';
-      overlay.setAttribute('aria-hidden', 'false');
-      console.warn('Autoplay blocked:', err);
-    });
-
-    // وقتی کاربر کلیک کرد: ویدئو را پخش کن و (در صورت خواست) صدا را فعال کن
-    playBtn.addEventListener('click', function() {
-      // اگر می‌خواهید صدا فعال شود: video.muted = false;
-      video.muted = false;         // اگر می‌خواهید صدا داشته باشد پس از تعامل کاربر فعال می‌شود
-      video.play().catch(e => console.error('Play failed after click:', e));
-      overlay.style.display = 'none';
-      overlay.setAttribute('aria-hidden', 'true');
-    });
-
-    // نکته: اگر می‌خواهید همیشه بی‌صدا بماند برای autoplay، خط video.muted = false را حذف کنید.
-  </script>
+  <video src="EvaMovie.mp4" autoplay loop muted playsinline></video>
 </body>
 </html>
