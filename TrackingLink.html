@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>دفتر بازرسی، نظارت و ارزیابی مدیریت</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    #header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 0;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    #container {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #333;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    #tracking-text {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 30px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      box-sizing: border-box;
+      border: 1px solid #4CAF50;
+      border-radius: 5px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #45a049;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #4CAF50;
+      border-radius: 5px;
+      background-color: #e8f5e9;
+      color: #2000bb;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 600px) {
+      #container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 18px;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="header">بنیاد مسکن انقلاب اسلامی</div>
+  <div id="container">
+    <h1>دفتر بازرسی، نظارت و ارزیابی مدیریت</h1>
+    <p id="tracking-text">پیگیری درخواست</p>
+    <input type="text" id="trackingCode" placeholder="کد رهگیری را وارد کنید">
+    <button onclick="checkTrackingCode()">بررسی</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function checkTrackingCode() {
+      var trackingCode = document.getElementById("trackingCode").value;
+      var url = "https://script.google.com/macros/s/AKfycbzgl35_28TRuqEBNO_WySARYiwLhInNzkmByTtd7hMj2veRlDIzlZwlo42yVterqRw3xg/exec?trackingCode=" + trackingCode;
+
+      fetch(url)
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById("result").innerText = data;
+        })
+        .catch(error => {
+          document.getElementById("result").innerText = "خطا در برقراری ارتباط. لطفا دوباره تلاش کنید";
+        });
+    }
+  </script>
+</body>
+</html>
