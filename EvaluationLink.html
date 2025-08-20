@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Iframe</title>
+</head>
+<body>
+    <script>
+        // تابع برای دریافت مقدار پارامتر از URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // دریافت مقدار id از URL
+        const id = getQueryParam('id');
+
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://survey.porsline.ir/s/nd3Gwt7P`;      
+            iframe.width = "100%";
+            iframe.height = "700px";
+            iframe.style.border = "none";
+            document.body.appendChild(iframe);
+
+    </script>
+</body>
+</html>
