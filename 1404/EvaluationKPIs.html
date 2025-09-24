@@ -1,1 +1,332 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ارزیابی</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #6c757d;
+            --rating-filled: #ffc107;
+            --rating-empty: #e4e5e9;
+            --border-radius-lg: 1rem;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+        }
+
+        .evaluator-info {
+            display: flex;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1.5rem;
+        }
+
+        .evaluator-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 1rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .evaluator-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evaluator-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .evaluator-post {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin: 0;
+        }
+
+        .section-header {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .axis-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .axis-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .indicator-item {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .indicator-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-wrapper {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        .rating-wrapper input[type="radio"] {
+            display: none;
+        }
+
+        .rating-wrapper label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--rating-empty);
+            transition: color 0.2s ease-in-out;
+        }
+
+        .rating-wrapper input[type="radio"]:checked ~ label {
+            color: var(--rating-filled);
+        }
+
+        .rating-wrapper label:hover,
+        .rating-wrapper label:hover ~ label {
+            color: var(--rating-filled);
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .message {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="loading" class="loading">
+        <p>در حال بارگذاری اطلاعات...</p>
+    </div>
+
+    <div id="error-message" class="message" style="display: none;"></div>
+    
+    <div id="evaluator-card" style="display: none;">
+        <div class="evaluator-info">
+            <img id="evaluator-image" class="evaluator-image" alt="تصویر ارزیاب‌شونده">
+            <div class="evaluator-details">
+                <p id="evaluator-name" class="evaluator-name"></p>
+                <p id="evaluator-post" class="evaluator-post"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="evaluation-list" style="display: none;">
+        <p class="section-header">شاخص‌های ارزیابی</p>
+    </div>
+
+    <button id="submit-btn" class="submit-button" style="display: none;">ثبت ارزیابی</button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        // آدرس API جدید شما
+        const apiBaseUrl = 'https://script.google.com/macros/s/AKfycbypZXGwxf46GYs7vtmwMH0WqNumkC6BAR3M06Cwh7i3lxZ3ryX0MyWqus_p4mDjIo6b/exec'; 
+
+        const loadingElement = document.getElementById('loading');
+        const evaluatorCard = document.getElementById('evaluator-card');
+        const evaluationList = document.getElementById('evaluation-list');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorMessageElement = document.getElementById('error-message');
+
+        async function fetchData() {
+            try {
+                const url = `${apiBaseUrl}?id=${id}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.status === 'ok') {
+                    // نمایش اطلاعات ارزیاب شونده
+                    document.getElementById('evaluator-image').src = data.evaluatorInfo.image;
+                    document.getElementById('evaluator-name').textContent = data.evaluatorInfo.name;
+                    document.getElementById('evaluator-post').textContent = data.evaluatorInfo.post;
+                    evaluatorCard.style.display = 'block';
+
+                    // نمایش لیست شاخص‌های ارزیابی
+                    const axesData = groupIndicatorsByAxis(data.evaluationItems);
+                    renderEvaluationList(axesData);
+                    evaluationList.style.display = 'block';
+                    submitBtn.style.display = 'block';
+                } else {
+                    errorMessageElement.textContent = data.message;
+                    errorMessageElement.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageElement.textContent = 'خطا در برقراری ارتباط با سرور.';
+                errorMessageElement.style.display = 'block';
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        }
+
+        function groupIndicatorsByAxis(items) {
+            const axes = {};
+            items.forEach(item => {
+                if (!axes[item.axis]) {
+                    axes[item.axis] = [];
+                }
+                axes[item.axis].push(item);
+            });
+            return axes;
+        }
+
+        function renderEvaluationList(axesData) {
+            evaluationList.innerHTML = '<p class="section-header">شاخص‌های ارزیابی</p>';
+            for (const axis in axesData) {
+                const axisDiv = document.createElement('div');
+                axisDiv.className = 'axis-item';
+                axisDiv.innerHTML = `<div class="axis-title">${axis}</div>`;
+                
+                axesData[axis].forEach(indicator => {
+                    const indicatorDiv = document.createElement('div');
+                    indicatorDiv.className = 'indicator-item';
+                    indicatorDiv.innerHTML = `
+                        <p class="indicator-title">${indicator.indicator}</p>
+                        <div class="rating-wrapper" data-id="${indicator.id}">
+                            <input type="radio" id="star5-${indicator.id}" name="rating-${indicator.id}" value="5" />
+                            <label for="star5-${indicator.id}">★</label>
+                            <input type="radio" id="star4-${indicator.id}" name="rating-${indicator.id}" value="4" />
+                            <label for="star4-${indicator.id}">★</label>
+                            <input type="radio" id="star3-${indicator.id}" name="rating-${indicator.id}" value="3" />
+                            <label for="star3-${indicator.id}">★</label>
+                            <input type="radio" id="star2-${indicator.id}" name="rating-${indicator.id}" value="2" />
+                            <label for="star2-${indicator.id}">★</label>
+                            <input type="radio" id="star1-${indicator.id}" name="rating-${indicator.id}" value="1" />
+                            <label for="star1-${indicator.id}">★</label>
+                        </div>
+                    `;
+                    axisDiv.appendChild(indicatorDiv);
+                });
+                evaluationList.appendChild(axisDiv);
+            }
+        }
+
+        submitBtn.addEventListener('click', async () => {
+            const ratings = {};
+            let allRated = true;
+            document.querySelectorAll('.rating-wrapper').forEach(wrapper => {
+                const id = wrapper.dataset.id;
+                const checkedStar = wrapper.querySelector('input[type="radio"]:checked');
+                if (checkedStar) {
+                    ratings[id] = checkedStar.value;
+                } else {
+                    allRated = false;
+                }
+            });
+
+            if (!allRated) {
+                alert('لطفاً به تمامی شاخص‌ها امتیاز دهید.');
+                return;
+            }
+
+            const submissionData = Object.keys(ratings).map(id => ({
+                id: id,
+                score: ratings[id]
+            }));
+
+            try {
+                const response = await fetch(`${apiBaseUrl}?action=submit&id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ratings: submissionData })
+                });
+                const result = await response.json();
+                
+                if (result.status === 'ok') {
+                    alert('ارزیابی با موفقیت ثبت شد!');
+                    window.location.reload(); 
+                } else {
+                    alert('خطا در ثبت ارزیابی: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('خطا در ارسال اطلاعات به سرور.');
+            }
+        });
+
+        if (id) {
+            fetchData();
+        } else {
+            loadingElement.style.display = 'none';
+            errorMessageElement.textContent = 'پارامتر ID در URL یافت نشد.';
+            errorMessageElement.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
