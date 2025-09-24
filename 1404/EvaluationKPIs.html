@@ -1,132 +1,332 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>ارزیابی</title>
-  <style>
-    body { font-family: Vazirmatn, sans-serif; margin: 20px; background: #f9f9f9; }
-    .card { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); margin-bottom: 20px; }
-    .user-info { display: flex; align-items: center; gap: 15px; }
-    .avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; }
-    .name { font-size: 1.3em; font-weight: bold; }
-    .role { color: gray; font-size: 0.9em; }
-    .axis { font-size: 1.1em; font-weight: bold; margin-top: 15px; }
-    .kpi { margin: 8px 0; font-size: 0.95em; }
-    .stars span { font-size: 22px; cursor: pointer; color: #ccc; }
-    .stars span.active { color: gold; }
-    button { margin-top: 20px; padding: 10px 20px; border: none; background: #007bff; color: white; border-radius: 8px; cursor: pointer; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه ارزیابی</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #6c757d;
+            --rating-filled: #ffc107;
+            --rating-empty: #e4e5e9;
+            --border-radius-lg: 1rem;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+        }
+
+        .evaluator-info {
+            display: flex;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1.5rem;
+        }
+
+        .evaluator-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 1rem;
+            border: 2px solid var(--primary-color);
+        }
+
+        .evaluator-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .evaluator-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .evaluator-post {
+            font-size: 0.9rem;
+            color: var(--light-text);
+            margin: 0;
+        }
+
+        .section-header {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .axis-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .axis-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .indicator-item {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .indicator-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .rating-wrapper {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 5px;
+        }
+
+        .rating-wrapper input[type="radio"] {
+            display: none;
+        }
+
+        .rating-wrapper label {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--rating-empty);
+            transition: color 0.2s ease-in-out;
+        }
+
+        .rating-wrapper input[type="radio"]:checked ~ label {
+            color: var(--rating-filled);
+        }
+
+        .rating-wrapper label:hover,
+        .rating-wrapper label:hover ~ label {
+            color: var(--rating-filled);
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .message {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            padding: 2rem;
+        }
+    </style>
 </head>
 <body>
-  <div id="userCard" class="card" style="display:none;"></div>
-  <div id="evaluateList" class="card" style="display:none;"></div>
-  <button id="submitBtn" style="display:none;">ثبت ارزیابی</button>
+
+<div class="container">
+    <div id="loading" class="loading">
+        <p>در حال بارگذاری اطلاعات...</p>
+    </div>
+
+    <div id="error-message" class="message" style="display: none;"></div>
+    
+    <div id="evaluator-card" style="display: none;">
+        <div class="evaluator-info">
+            <img id="evaluator-image" class="evaluator-image" alt="تصویر ارزیاب‌شونده">
+            <div class="evaluator-details">
+                <p id="evaluator-name" class="evaluator-name"></p>
+                <p id="evaluator-post" class="evaluator-post"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="evaluation-list" style="display: none;">
+        <p class="section-header">شاخص‌های ارزیابی</p>
+    </div>
+
+    <button id="submit-btn" class="submit-button" style="display: none;">ثبت ارزیابی</button>
+</div>
 
 <script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbxffEmwj3VRFpTPQIN2cNJVCmSkQbTnEDOI1230NVMRF7V9bJ8z4yhV7fuftPRoCEIy/exec";
+    document.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        // آدرس API جدید شما
+        const apiBaseUrl = 'https://script.google.com/macros/s/AKfycbzxkH3L3CXz0xil10p6e0eVKARKjCr7IEEwcpDIgfGCflodOJN4gCKADu3-GdkZF2KD/exec'; 
 
-// گرفتن id از URL
-const urlParams = new URLSearchParams(window.location.search);
-const inputId = urlParams.get("id");
+        const loadingElement = document.getElementById('loading');
+        const evaluatorCard = document.getElementById('evaluator-card');
+        const evaluationList = document.getElementById('evaluation-list');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorMessageElement = document.getElementById('error-message');
 
-let scores = {}; // ذخیره امتیازها
+        async function fetchData() {
+            try {
+                const url = `${apiBaseUrl}?id=${id}`;
+                const response = await fetch(url);
+                const data = await response.json();
 
-if (inputId) {
-  // قدم اول: گرفتن EvaluateList
-  fetch(`${apiUrl}?action=getEvaluateList&id=${inputId}`)
-    .then(res => res.json())
-    .then(data => {
-      if (!Array.isArray(data) || data.length === 0) {
-        document.getElementById("userCard").innerText = "داده معتبر یافت نشد.";
-        document.getElementById("userCard").style.display = "block";
-        return;
-      }
+                if (data.status === 'ok') {
+                    // نمایش اطلاعات ارزیاب شونده
+                    document.getElementById('evaluator-image').src = data.evaluatorInfo.image;
+                    document.getElementById('evaluator-name').textContent = data.evaluatorInfo.name;
+                    document.getElementById('evaluator-post').textContent = data.evaluatorInfo.post;
+                    evaluatorCard.style.display = 'block';
 
-      // ستون M = index 12 و ستون T = index 19
-      const row = data.find(r => r[12] === inputId);
-      if (!row) {
-        document.getElementById("userCard").innerText = "شناسه در لیست وجود ندارد.";
-        document.getElementById("userCard").style.display = "block";
-        return;
-      }
-      if (row[19] !== "Sent") {
-        document.getElementById("userCard").innerText = "این ارزیابی هنوز فعال نشده است.";
-        document.getElementById("userCard").style.display = "block";
-        return;
-      }
+                    // نمایش لیست شاخص‌های ارزیابی
+                    const axesData = groupIndicatorsByAxis(data.evaluationItems);
+                    renderEvaluationList(axesData);
+                    evaluationList.style.display = 'block';
+                    submitBtn.style.display = 'block';
+                } else {
+                    errorMessageElement.textContent = data.message;
+                    errorMessageElement.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessageElement.textContent = 'خطا در برقراری ارتباط با سرور.';
+                errorMessageElement.style.display = 'block';
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        }
 
-      // نمایش کارت کاربر
-      const userCard = document.getElementById("userCard");
-      userCard.innerHTML = `
-        <div class="user-info">
-          <img src="${row[15]}" class="avatar">
-          <div>
-            <div class="name">${row[1]}</div>
-            <div class="role">${row[5]}</div>
-          </div>
-        </div>`;
-      userCard.style.display = "block";
+        function groupIndicatorsByAxis(items) {
+            const axes = {};
+            items.forEach(item => {
+                if (!axes[item.axis]) {
+                    axes[item.axis] = [];
+                }
+                axes[item.axis].push(item);
+            });
+            return axes;
+        }
 
-      // قدم دوم: گرفتن PrsEvaluate
-      return fetch(`${apiUrl}?action=getPrsEvaluate&id=${inputId}`);
-    })
-    .then(res => res ? res.json() : null)
-    .then(data => {
-      if (!data) return;
-      const container = document.getElementById("evaluateList");
-      let axes = {};
-      data.forEach(row => {
-        const axis = row[7]; // ستون H
-        const kpi  = row[8]; // ستون I
-        if (!axes[axis]) axes[axis] = [];
-        axes[axis].push(kpi);
-      });
+        function renderEvaluationList(axesData) {
+            evaluationList.innerHTML = '<p class="section-header">شاخص‌های ارزیابی</p>';
+            for (const axis in axesData) {
+                const axisDiv = document.createElement('div');
+                axisDiv.className = 'axis-item';
+                axisDiv.innerHTML = `<div class="axis-title">${axis}</div>`;
+                
+                axesData[axis].forEach(indicator => {
+                    const indicatorDiv = document.createElement('div');
+                    indicatorDiv.className = 'indicator-item';
+                    indicatorDiv.innerHTML = `
+                        <p class="indicator-title">${indicator.indicator}</p>
+                        <div class="rating-wrapper" data-id="${indicator.id}">
+                            <input type="radio" id="star5-${indicator.id}" name="rating-${indicator.id}" value="5" />
+                            <label for="star5-${indicator.id}">★</label>
+                            <input type="radio" id="star4-${indicator.id}" name="rating-${indicator.id}" value="4" />
+                            <label for="star4-${indicator.id}">★</label>
+                            <input type="radio" id="star3-${indicator.id}" name="rating-${indicator.id}" value="3" />
+                            <label for="star3-${indicator.id}">★</label>
+                            <input type="radio" id="star2-${indicator.id}" name="rating-${indicator.id}" value="2" />
+                            <label for="star2-${indicator.id}">★</label>
+                            <input type="radio" id="star1-${indicator.id}" name="rating-${indicator.id}" value="1" />
+                            <label for="star1-${indicator.id}">★</label>
+                        </div>
+                    `;
+                    axisDiv.appendChild(indicatorDiv);
+                });
+                evaluationList.appendChild(axisDiv);
+            }
+        }
 
-      container.innerHTML = "";
-      for (let axis in axes) {
-        container.innerHTML += `<div class="axis">${axis}</div>`;
-        axes[axis].forEach(kpi => {
-          const kpiId = kpi.replace(/\s+/g,'_');
-          container.innerHTML += `
-            <div class="kpi">${kpi}</div>
-            <div class="stars" data-kpi="${kpi}">
-              ${[1,2,3,4,5].map(n => `<span data-val="${n}">★</span>`).join("")}
-            </div>`;
+        submitBtn.addEventListener('click', async () => {
+            const ratings = {};
+            let allRated = true;
+            document.querySelectorAll('.rating-wrapper').forEach(wrapper => {
+                const id = wrapper.dataset.id;
+                const checkedStar = wrapper.querySelector('input[type="radio"]:checked');
+                if (checkedStar) {
+                    ratings[id] = checkedStar.value;
+                } else {
+                    allRated = false;
+                }
+            });
+
+            if (!allRated) {
+                alert('لطفاً به تمامی شاخص‌ها امتیاز دهید.');
+                return;
+            }
+
+            const submissionData = Object.keys(ratings).map(id => ({
+                id: id,
+                score: ratings[id]
+            }));
+
+            try {
+                const response = await fetch(`${apiBaseUrl}?action=submit&id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ratings: submissionData })
+                });
+                const result = await response.json();
+                
+                if (result.status === 'ok') {
+                    alert('ارزیابی با موفقیت ثبت شد!');
+                    window.location.reload(); 
+                } else {
+                    alert('خطا در ثبت ارزیابی: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Submission Error:', error);
+                alert('خطا در ارسال اطلاعات به سرور.');
+            }
         });
-      }
-      container.style.display = "block";
-      document.getElementById("submitBtn").style.display = "block";
 
-      // event handler ستاره‌ها
-      document.querySelectorAll(".stars span").forEach(star => {
-        star.addEventListener("click", e => {
-          const val = parseInt(star.dataset.val);
-          const parent = star.parentElement;
-          const kpi = parent.dataset.kpi;
-          scores[kpi] = val;
-          parent.querySelectorAll("span").forEach(s => {
-            s.classList.toggle("active", parseInt(s.dataset.val) <= val);
-          });
-        });
-      });
+        if (id) {
+            fetchData();
+        } else {
+            loadingElement.style.display = 'none';
+            errorMessageElement.textContent = 'پارامتر ID در URL یافت نشد.';
+            errorMessageElement.style.display = 'block';
+        }
     });
-
-  // دکمه ثبت
-  document.getElementById("submitBtn").addEventListener("click", () => {
-    for (let kpi in scores) {
-      fetch(apiUrl, {
-        method: "POST",
-        body: new URLSearchParams({
-          action: "savePrsEvaluate",
-          id: inputId,
-          kpi: kpi,
-          score: scores[kpi]
-        })
-      });
-    }
-    alert("امتیازها ثبت شد.");
-  });
-}
 </script>
+
 </body>
 </html>
