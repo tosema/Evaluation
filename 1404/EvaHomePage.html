@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحه با تصویر زمینه و دکمه</title>
+    <style>
+        @font-face {
+            font-family: 'Vazir';
+            src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/Vazir.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font/dist/Vazir.woff') format('woff');
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Vazir', Arial, sans-serif;
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            height: 100%;
+            z-index: -1;
+        }
+        .button {
+            margin-bottom: 160px;
+            margin-left: 200px;
+            padding: 10px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background-color: #A22828;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #cc5a5a;
+        }
+    </style>
+</head>
+<body>
+    <img class="background" src="TextImage.png" alt="تصویر زمینه">
+    <a class="button" href="https://tosemaskan.github.io/Evaluation/EvaluationPage4.html?id=hlval33lavlhhlv">
+        ورود به سامانه ارزشیابی
+    </a>
+</body>
+</html>
